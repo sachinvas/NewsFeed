@@ -27,6 +27,9 @@ class NDBlogTableViewController: UITableViewController, NSFetchedResultsControll
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let blogItemCell = UINib(nibName: "NDBlogItemTableViewCell", bundle: NSBundle.mainBundle())
+        tableView.registerNib(blogItemCell, forCellReuseIdentifier: "BlogItemCell")
+
         loadingSpinner = UIActivityIndicatorView()
         loadingSpinner.activityIndicatorViewStyle = .Gray
         let x = tableView.frame.size.width/2 - 10
@@ -47,8 +50,6 @@ class NDBlogTableViewController: UITableViewController, NSFetchedResultsControll
                 }
             })
         })
-        let blogItemCell = UINib(nibName: "NDBlogItemTableViewCell", bundle: NSBundle.mainBundle())
-        tableView.registerNib(blogItemCell, forCellReuseIdentifier: "BlogItemCell")
     }
     
     func performFetch() {
@@ -83,11 +84,13 @@ class NDBlogTableViewController: UITableViewController, NSFetchedResultsControll
         let blogItem = self.fetchedResultsController.fetchedObjects![indexPath.row] as! BlogItem
         tableViewCell!.dateLabel.text = NDUtility.utility.newsDateDisplayFormatter.stringFromDate(blogItem.publicationDate!)
         tableViewCell!.titleLabel.text = blogItem.title
-        do {
-        tableViewCell!.descriptionTextView.attributedText = try NSAttributedString(data: blogItem.blogDescription!.dataUsingEncoding(NSUTF8StringEncoding)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-            NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding], documentAttributes: nil)
-        } catch let error {
-            print(error)
+        dispatch_async(dispatch_get_main_queue()) {
+            do {
+                tableViewCell!.descriptionTextView.attributedText = try NSAttributedString(data: blogItem.blogDescription!.dataUsingEncoding(NSUTF8StringEncoding)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+                    NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding], documentAttributes: nil)
+            } catch let error {
+                print(error)
+            }
         }
         tableViewCell?.accessoryType = .DisclosureIndicator
         return tableViewCell!
