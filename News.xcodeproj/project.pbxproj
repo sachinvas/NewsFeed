@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5405A4FC1D3CFDA700024270 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5405A4FB1D3CFDA700024270 /* LaunchScreen.storyboard */; };
 		5410AD271D3CCDF300E11E3B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5410AD171D3CCDF300E11E3B /* Assets.xcassets */; };
 		5410AD291D3CCDF300E11E3B /* datalicious-logo-default-256.png in Resources */ = {isa = PBXBuildFile; fileRef = 5410AD191D3CCDF300E11E3B /* datalicious-logo-default-256.png */; };
 		5410AD2A1D3CCDF300E11E3B /* datalicious-logo-default-1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 5410AD1A1D3CCDF300E11E3B /* datalicious-logo-default-1024.png */; };
@@ -21,7 +22,6 @@
 		5410AD341D3CCDF300E11E3B /* NDUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5410AD241D3CCDF300E11E3B /* NDUtility.swift */; };
 		5410AD351D3CCDF300E11E3B /* News.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5410AD251D3CCDF300E11E3B /* News.xcdatamodeld */; };
 		543BD4BF1D3B31A700075A3D /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 543BD4BE1D3B31A700075A3D /* CoreLocation.framework */; };
-		5440F3731D3CD6000017A427 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5440F3711D3CD6000017A427 /* LaunchScreen.storyboard */; };
 		5440F3741D3CD6000017A427 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5440F3721D3CD6000017A427 /* Main.storyboard */; };
 		5440F3791D3CD62A0017A427 /* BlogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5440F3751D3CD62A0017A427 /* BlogItem.swift */; };
 		5440F37A1D3CD62A0017A427 /* BlogItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5440F3761D3CD62A0017A427 /* BlogItem+CoreDataProperties.swift */; };
@@ -45,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5405A4FB1D3CFDA700024270 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5410AD171D3CCDF300E11E3B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = News/Assets.xcassets; sourceTree = "<group>"; };
 		5410AD191D3CCDF300E11E3B /* datalicious-logo-default-256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "datalicious-logo-default-256.png"; path = "News/datalicious-logo-default-256.png"; sourceTree = "<group>"; };
 		5410AD1A1D3CCDF300E11E3B /* datalicious-logo-default-1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "datalicious-logo-default-1024.png"; path = "News/datalicious-logo-default-1024.png"; sourceTree = "<group>"; };
@@ -60,7 +61,6 @@
 		5410AD241D3CCDF300E11E3B /* NDUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDUtility.swift; path = News/NDUtility.swift; sourceTree = "<group>"; };
 		5410AD261D3CCDF300E11E3B /* News.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = News.xcdatamodel; sourceTree = "<group>"; };
 		543BD4BE1D3B31A700075A3D /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		5440F3711D3CD6000017A427 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = News/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5440F3721D3CD6000017A427 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = News/Main.storyboard; sourceTree = "<group>"; };
 		5440F3751D3CD62A0017A427 /* BlogItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlogItem.swift; path = News/BlogItem.swift; sourceTree = "<group>"; };
 		5440F3761D3CD62A0017A427 /* BlogItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "BlogItem+CoreDataProperties.swift"; path = "News/BlogItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -111,7 +111,6 @@
 		5410AD361D3CCE1E00E11E3B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				5440F3711D3CD6000017A427 /* LaunchScreen.storyboard */,
 				5440F3721D3CD6000017A427 /* Main.storyboard */,
 				5410AD171D3CCDF300E11E3B /* Assets.xcassets */,
 				5410AD191D3CCDF300E11E3B /* datalicious-logo-default-256.png */,
@@ -119,6 +118,7 @@
 				5410AD1B1D3CCDF300E11E3B /* Info.plist */,
 				5410AD1D1D3CCDF300E11E3B /* NDBlogItemTableViewCell.xib */,
 				5410AD251D3CCDF300E11E3B /* News.xcdatamodeld */,
+				5405A4FB1D3CFDA700024270 /* LaunchScreen.storyboard */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -292,11 +292,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5405A4FC1D3CFDA700024270 /* LaunchScreen.storyboard in Resources */,
 				5440F3741D3CD6000017A427 /* Main.storyboard in Resources */,
 				5410AD2D1D3CCDF300E11E3B /* NDBlogItemTableViewCell.xib in Resources */,
 				5410AD271D3CCDF300E11E3B /* Assets.xcassets in Resources */,
 				5410AD2A1D3CCDF300E11E3B /* datalicious-logo-default-1024.png in Resources */,
-				5440F3731D3CD6000017A427 /* LaunchScreen.storyboard in Resources */,
 				5410AD291D3CCDF300E11E3B /* datalicious-logo-default-256.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

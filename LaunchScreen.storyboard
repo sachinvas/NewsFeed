@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
@@ -16,18 +17,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="datalicious-logo-default-512.png" translatesAutoresizingMaskIntoConstraints="NO" id="jqJ-dR-viT">
-                                <rect key="frame" x="200" y="275" width="200" height="50"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="datalicious-logo-default-256.png" translatesAutoresizingMaskIntoConstraints="NO" id="6R7-Xe-JO0">
+                                <rect key="frame" x="200" y="269.5" width="200" height="60"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="3Tq-dx-CuP"/>
-                                    <constraint firstAttribute="width" constant="200" id="JAN-Sv-cbF"/>
+                                    <constraint firstAttribute="width" constant="200" id="gaA-B0-rs7"/>
+                                    <constraint firstAttribute="height" constant="60" id="v4F-Cv-0q7"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="jqJ-dR-viT" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="P84-fJ-Yyt"/>
-                            <constraint firstItem="jqJ-dR-viT" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="eA1-HA-Gzm"/>
+                            <constraint firstItem="6R7-Xe-JO0" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="m1t-NX-6mb"/>
+                            <constraint firstItem="6R7-Xe-JO0" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="t1M-qv-EHX"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -37,6 +38,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="datalicious-logo-default-512.png" width="512" height="119"/>
+        <image name="datalicious-logo-default-256.png" width="256" height="42"/>
     </resources>
 </document>
