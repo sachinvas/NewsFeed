@@ -25,7 +25,9 @@ class NDNetworkManager: NSObject {
                 blogItemParser.parse()
                 let newsItemController = NDNewsItemController(moc: NDCoreDataManager.sharedManager.backgroundMOC)
                 for blogItemDictionary in blogItemParser.blogItems {
-                    newsItemController.insertObject(blogItemDictionary)
+                    if newsItemController.checkIfObjectExistInDatabaseForguid(blogItemDictionary["guid"] as! String) == false {
+                        newsItemController.insertObject(blogItemDictionary)
+                    }
                 }
                 newsItemController.saveMoc()
             }

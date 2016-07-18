@@ -54,6 +54,28 @@ class NDNewsItemController: NSObject {
         }
     }
     
+    func checkIfObjectExistInDatabaseForguid(guid: NSString) -> Bool {
+        var objectExist:Bool = false
+        let subStrings = guid.componentsSeparatedByString("=")
+        if subStrings.count > 1 {
+            if let blogId = Int(subStrings[1]) {
+                let fetchRequest = NSFetchRequest(entityName: "BlogItem")
+                fetchRequest.predicate = NSPredicate(format: "blogId = %d", blogId)
+                fetchRequest.resultType = .CountResultType
+                do {
+                    if let result = try managedObjectContext.executeRequest(fetchRequest) as? NSAsynchronousFetchResult {
+                        if let resultArray = result.finalResult {
+                            objectExist = resultArray[0] as! Int > 0
+                        }
+                    }
+                } catch let error {
+                    print(error)
+                }
+            }
+        }
+        return objectExist
+    }
+    
     func saveMoc() {
         do {
             try managedObjectContext.save()
