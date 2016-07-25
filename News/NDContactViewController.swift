@@ -14,6 +14,14 @@ let rowHeight: CGFloat = 50.0; //Row Height from storyboard
 
 class NDContactViewController: UITableViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        NDNetworkManager.sharedManager.getContactDetailsFromDatalicicous { (success:Bool) in
+            
+        }
+    }
+    
     var navigationBarHeight:CGFloat {
         get {
             var height:CGFloat = 0.0

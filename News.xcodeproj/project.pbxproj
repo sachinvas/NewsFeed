@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5403193B1D460EFA00C13209 /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540319371D460EFA00C13209 /* Account+CoreDataProperties.swift */; };
+		5403193C1D460EFA00C13209 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540319381D460EFA00C13209 /* Account.swift */; };
+		5403193D1D460EFA00C13209 /* BlogPreviewItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540319391D460EFA00C13209 /* BlogPreviewItem+CoreDataProperties.swift */; };
+		5403193E1D460EFA00C13209 /* BlogPreviewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5403193A1D460EFA00C13209 /* BlogPreviewItem.swift */; };
+		540319431D460F5B00C13209 /* NDAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5403193F1D460F5B00C13209 /* NDAuthenticationViewController.swift */; };
+		540319441D460F5B00C13209 /* NDPinterestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540319401D460F5B00C13209 /* NDPinterestViewController.swift */; };
+		540319451D460F5B00C13209 /* NDTwitterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540319411D460F5B00C13209 /* NDTwitterViewController.swift */; };
+		540319461D460F5B00C13209 /* NDYouTubeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540319421D460F5B00C13209 /* NDYouTubeViewController.swift */; };
 		5410AD271D3CCDF300E11E3B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5410AD171D3CCDF300E11E3B /* Assets.xcassets */; };
 		5410AD291D3CCDF300E11E3B /* datalicious-logo-default-256.png in Resources */ = {isa = PBXBuildFile; fileRef = 5410AD191D3CCDF300E11E3B /* datalicious-logo-default-256.png */; };
 		5410AD2A1D3CCDF300E11E3B /* datalicious-logo-default-1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 5410AD1A1D3CCDF300E11E3B /* datalicious-logo-default-1024.png */; };
@@ -45,6 +53,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		540319371D460EFA00C13209 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Account+CoreDataProperties.swift"; path = "News/Account+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		540319381D460EFA00C13209 /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Account.swift; path = News/Account.swift; sourceTree = "<group>"; };
+		540319391D460EFA00C13209 /* BlogPreviewItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "BlogPreviewItem+CoreDataProperties.swift"; path = "News/BlogPreviewItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		5403193A1D460EFA00C13209 /* BlogPreviewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlogPreviewItem.swift; path = News/BlogPreviewItem.swift; sourceTree = "<group>"; };
+		5403193F1D460F5B00C13209 /* NDAuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDAuthenticationViewController.swift; path = News/NDAuthenticationViewController.swift; sourceTree = "<group>"; };
+		540319401D460F5B00C13209 /* NDPinterestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDPinterestViewController.swift; path = News/NDPinterestViewController.swift; sourceTree = "<group>"; };
+		540319411D460F5B00C13209 /* NDTwitterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDTwitterViewController.swift; path = News/NDTwitterViewController.swift; sourceTree = "<group>"; };
+		540319421D460F5B00C13209 /* NDYouTubeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDYouTubeViewController.swift; path = News/NDYouTubeViewController.swift; sourceTree = "<group>"; };
 		5410AD171D3CCDF300E11E3B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = News/Assets.xcassets; sourceTree = "<group>"; };
 		5410AD191D3CCDF300E11E3B /* datalicious-logo-default-256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "datalicious-logo-default-256.png"; path = "News/datalicious-logo-default-256.png"; sourceTree = "<group>"; };
 		5410AD1A1D3CCDF300E11E3B /* datalicious-logo-default-1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "datalicious-logo-default-1024.png"; path = "News/datalicious-logo-default-1024.png"; sourceTree = "<group>"; };
@@ -108,6 +124,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		540319361D460C2D00C13209 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5457517A1D3D034300DCF3E7 /* NDBlogItemTableViewCell.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		5410AD361D3CCE1E00E11E3B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -126,9 +150,13 @@
 		5410AD371D3CCE2D00E11E3B /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				5410AD1E1D3CCDF300E11E3B /* NDBlogTableViewController.swift */,
-				5410AD1F1D3CCDF300E11E3B /* NDContactViewController.swift */,
 				5410AD231D3CCDF300E11E3B /* NDTabbarController.swift */,
+				5410AD1E1D3CCDF300E11E3B /* NDBlogTableViewController.swift */,
+				540319411D460F5B00C13209 /* NDTwitterViewController.swift */,
+				540319401D460F5B00C13209 /* NDPinterestViewController.swift */,
+				540319421D460F5B00C13209 /* NDYouTubeViewController.swift */,
+				5410AD1F1D3CCDF300E11E3B /* NDContactViewController.swift */,
+				5403193F1D460F5B00C13209 /* NDAuthenticationViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -146,6 +174,10 @@
 		5410AD431D3CCF0600E11E3B /* Managed Objects */ = {
 			isa = PBXGroup;
 			children = (
+				540319371D460EFA00C13209 /* Account+CoreDataProperties.swift */,
+				540319381D460EFA00C13209 /* Account.swift */,
+				540319391D460EFA00C13209 /* BlogPreviewItem+CoreDataProperties.swift */,
+				5403193A1D460EFA00C13209 /* BlogPreviewItem.swift */,
 				5440F3751D3CD62A0017A427 /* BlogItem.swift */,
 				5440F3761D3CD62A0017A427 /* BlogItem+CoreDataProperties.swift */,
 				5440F3771D3CD62A0017A427 /* Category.swift */,
@@ -159,11 +191,11 @@
 			children = (
 				5440F37E1D3CD6540017A427 /* NDParser.swift */,
 				5410AD1C1D3CCDF300E11E3B /* NDAppDelegate.swift */,
-				5410AD371D3CCE2D00E11E3B /* View Controllers */,
-				5410AD381D3CCEC900E11E3B /* CoreData Management */,
 				5410AD221D3CCDF300E11E3B /* NDNewtworkManager.swift */,
 				5410AD241D3CCDF300E11E3B /* NDUtility.swift */,
-				5457517A1D3D034300DCF3E7 /* NDBlogItemTableViewCell.swift */,
+				540319361D460C2D00C13209 /* Views */,
+				5410AD371D3CCE2D00E11E3B /* View Controllers */,
+				5410AD381D3CCEC900E11E3B /* CoreData Management */,
 				5410AD361D3CCE1E00E11E3B /* Resources */,
 			);
 			name = News;
@@ -364,20 +396,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				5457517B1D3D034300DCF3E7 /* NDBlogItemTableViewCell.swift in Sources */,
+				5403193B1D460EFA00C13209 /* Account+CoreDataProperties.swift in Sources */,
 				5440F3791D3CD62A0017A427 /* BlogItem.swift in Sources */,
 				5440F37C1D3CD62A0017A427 /* Category+CoreDataProperties.swift in Sources */,
+				540319431D460F5B00C13209 /* NDAuthenticationViewController.swift in Sources */,
 				5440F37A1D3CD62A0017A427 /* BlogItem+CoreDataProperties.swift in Sources */,
+				540319451D460F5B00C13209 /* NDTwitterViewController.swift in Sources */,
+				5403193D1D460EFA00C13209 /* BlogPreviewItem+CoreDataProperties.swift in Sources */,
+				540319461D460F5B00C13209 /* NDYouTubeViewController.swift in Sources */,
 				5410AD341D3CCDF300E11E3B /* NDUtility.swift in Sources */,
+				5403193E1D460EFA00C13209 /* BlogPreviewItem.swift in Sources */,
 				5410AD311D3CCDF300E11E3B /* NDNewsItemController.swift in Sources */,
 				5410AD331D3CCDF300E11E3B /* NDTabbarController.swift in Sources */,
 				5410AD2C1D3CCDF300E11E3B /* NDAppDelegate.swift in Sources */,
 				5410AD2E1D3CCDF300E11E3B /* NDBlogTableViewController.swift in Sources */,
 				5410AD301D3CCDF300E11E3B /* NDCoreDataManager.swift in Sources */,
 				5410AD321D3CCDF300E11E3B /* NDNewtworkManager.swift in Sources */,
+				540319441D460F5B00C13209 /* NDPinterestViewController.swift in Sources */,
 				5440F37F1D3CD6540017A427 /* NDParser.swift in Sources */,
 				5410AD351D3CCDF300E11E3B /* News.xcdatamodeld in Sources */,
 				5410AD2F1D3CCDF300E11E3B /* NDContactViewController.swift in Sources */,
 				5440F37B1D3CD62A0017A427 /* Category.swift in Sources */,
+				5403193C1D460EFA00C13209 /* Account.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

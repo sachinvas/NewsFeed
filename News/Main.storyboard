@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -89,7 +90,7 @@
         <!--Root View Controller-->
         <scene sceneID="qoE-D5-Hek">
             <objects>
-                <tableViewController id="Em7-L6-aKS" sceneMemberID="viewController">
+                <tableViewController id="Em7-L6-aKS" customClass="NDTwitterViewController" customModule="News" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="xEL-Df-UXk">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -131,7 +132,7 @@
         <!--Root View Controller-->
         <scene sceneID="idN-Gk-dWW">
             <objects>
-                <tableViewController id="ERL-Jj-jKi" sceneMemberID="viewController">
+                <tableViewController id="ERL-Jj-jKi" customClass="NDYouTubeViewController" customModule="News" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="oMl-lP-fik">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -173,7 +174,7 @@
         <!--Root View Controller-->
         <scene sceneID="5nd-Hk-6oV">
             <objects>
-                <tableViewController id="UW2-31-qX4" sceneMemberID="viewController">
+                <tableViewController id="UW2-31-qX4" customClass="NDPinterestViewController" customModule="News" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="y3H-l9-V2Q">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -219,7 +220,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="3NM-DC-19y">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                         <sections>
                             <tableViewSection id="xIE-f3-Ij6">
                                 <cells>
@@ -356,8 +357,61 @@
             </objects>
             <point key="canvasLocation" x="-26" y="2098"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="cBA-rd-7ZR">
+            <objects>
+                <navigationController storyboardIdentifier="AuthenticationScene" id="Ru9-xa-T1m" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="PKb-N4-pCs">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="UkI-pX-EhD" kind="relationship" relationship="rootViewController" id="jIm-1O-cWc"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ih3-vf-Xgy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-26" y="2914"/>
+        </scene>
+        <!--Authentication-->
+        <scene sceneID="8QU-AB-z6I">
+            <objects>
+                <viewController id="UkI-pX-EhD" customClass="NDAuthenticationViewController" customModule="News" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="t3u-iI-U80"/>
+                        <viewControllerLayoutGuide type="bottom" id="Uyl-ka-2HD"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="yFd-Kf-Jbe">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i5V-OV-S8b">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="i5V-OV-S8b" secondAttribute="trailing" constant="-20" id="0En-6H-8jv"/>
+                            <constraint firstItem="i5V-OV-S8b" firstAttribute="top" secondItem="t3u-iI-U80" secondAttribute="bottom" id="AcT-9T-wDj"/>
+                            <constraint firstItem="i5V-OV-S8b" firstAttribute="leading" secondItem="yFd-Kf-Jbe" secondAttribute="leadingMargin" constant="-20" id="YrJ-4d-Yhe"/>
+                            <constraint firstItem="Uyl-ka-2HD" firstAttribute="top" secondItem="i5V-OV-S8b" secondAttribute="bottom" id="jh6-uc-3os"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Authentication" id="cuB-lJ-9cU">
+                        <barButtonItem key="leftBarButtonItem" image="Cancel" id="PUY-4P-y01"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="authWebView" destination="i5V-OV-S8b" id="PFS-x0-zCN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HLQ-nT-nBE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="693" y="2914"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="Cancel" width="20" height="20"/>
         <image name="Contact" width="20" height="20"/>
         <image name="Customer Care" width="38" height="38"/>
         <image name="Email" width="38" height="38"/>

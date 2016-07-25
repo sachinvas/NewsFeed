@@ -3,4 +3,5 @@ use_frameworks!
 
 target 'News' do
     pod 'Alamofire', '~> 3.4'
+    pod 'TwitterKit'
 end

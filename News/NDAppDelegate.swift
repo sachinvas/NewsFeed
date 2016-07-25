@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Fabric
+import TwitterKit
 
 @UIApplicationMain
 class NDAppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +18,8 @@ class NDAppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        Twitter.sharedInstance().startWithConsumerKey("uyBkpqDnjRIoQMrwGOG3ZaDhL", consumerSecret: "5HpHDhBppjVleRsEGZvW7oZumdfPAXqtOdtnMOogLfMNYteEZ9")
+        Fabric.with([Twitter.self])
         return true
     }
 
@@ -41,6 +45,13 @@ class NDAppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
 //        self.saveContext()
+    }
+    
+    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+        if Twitter.sharedInstance().application(app, openURL: url, options: options) {
+            return true
+        }
+        return false
     }
 
     // MARK: - Core Data stack
