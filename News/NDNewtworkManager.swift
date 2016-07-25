@@ -23,7 +23,14 @@ class NDNetworkManager: NSObject {
         Twitter.sharedInstance().logInWithMethods([.WebBased]) {[weak self](session, error) in
             if let unwrappedSession = session {
                 self?.searchTweets(["q":"from@datalicious"], completionBlock: { (success, tweets) in
-                    
+                    if let tweeetArray = tweets {
+                        var filePath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+                        filePath = filePath + "/Tweets"
+                        let success = NSKeyedArchiver.archiveRootObject(tweeetArray, toFile: filePath)
+                        completionBlock(success, (success ? filePath : nil))
+                    } else {
+                        completionBlock(success, nil)
+                    }
                 })
             } else {
                 NSLog("Login error: %@", error!.localizedDescription);
