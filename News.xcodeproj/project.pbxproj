@@ -153,8 +153,8 @@
 				5410AD231D3CCDF300E11E3B /* NDTabbarController.swift */,
 				5410AD1E1D3CCDF300E11E3B /* NDBlogTableViewController.swift */,
 				540319411D460F5B00C13209 /* NDTwitterViewController.swift */,
-				540319401D460F5B00C13209 /* NDPinterestViewController.swift */,
 				540319421D460F5B00C13209 /* NDYouTubeViewController.swift */,
+				540319401D460F5B00C13209 /* NDPinterestViewController.swift */,
 				5410AD1F1D3CCDF300E11E3B /* NDContactViewController.swift */,
 				5403193F1D460F5B00C13209 /* NDAuthenticationViewController.swift */,
 			);

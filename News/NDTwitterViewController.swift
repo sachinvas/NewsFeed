@@ -13,6 +13,7 @@ import TwitterKit
 class NDTwitterViewController: UITableViewController {
     
     var tweets: [TWTRTweet]! = []
+    var session: TWTRSession!
     var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
@@ -27,7 +28,37 @@ class NDTwitterViewController: UITableViewController {
         tableView.addSubview(activityIndicator)
         
         activityIndicator.startAnimating()
-        NDNetworkManager.sharedManager.fetchDataliciousTweets {[weak self] (success: Bool, filePath: String?) in
+        
+        if let session: TWTRSession = Twitter.sharedInstance().sessionStore.existingUserSessions().count > 0 ? Twitter.sharedInstance().sessionStore.existingUserSessions()[0] as? TWTRSession : nil {
+            let error:NSError = NSError(domain: "", code: -999, userInfo: nil)
+            let isExpired = Twitter.sharedInstance().sessionStore.isExpiredSession(session, error: error)
+            if !isExpired {
+                self.session = session
+                fetchTweets()
+            } else {
+                Twitter.sharedInstance().sessionStore.refreshSessionClass(TWTRSession.self, sessionID: session.userID, completion: {[weak self] (session: AnyObject?, error: NSError?) in
+                    if error == nil {
+                        if let trtwSession = session as? TWTRSession {
+                            self?.session = trtwSession
+                            self?.fetchTweets()
+                        }
+                    }
+                })
+            }
+        } else {
+            Twitter.sharedInstance().logInWithCompletion {[weak self] (session: TWTRSession?, error: NSError?) in
+                if error == nil {
+                    if let trtwSession = session {
+                        self?.session = trtwSession
+                        self?.fetchTweets()
+                    }
+                }
+            }
+        }
+    }
+    
+    func fetchTweets() {
+        NDNetworkManager.sharedManager.fetchTweets {[weak self] (success: Bool, filePath: String?) in
             dispatch_async(dispatch_get_main_queue(), {
                 self?.activityIndicator.stopAnimating()
                 if success {

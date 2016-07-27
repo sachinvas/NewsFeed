@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import TwitterKit
+import GTMOAuth2
 
 class NDNetworkManager: NSObject {
     
@@ -19,26 +20,38 @@ class NDNetworkManager: NSObject {
         return Singleton.instance
     }
     
-    func fetchTweets(completionBlock: (Bool, String?)->()) {
-        Twitter.sharedInstance().logInWithMethods([.WebBased]) {[weak self](session, error) in
-            if let unwrappedSession = session {
-                self?.searchTweets(["q":"from@datalicious"], completionBlock: { (success, tweets) in
-                    if let tweeetArray = tweets {
-                        var filePath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
-                        filePath = filePath + "/Tweets"
-                        let success = NSKeyedArchiver.archiveRootObject(tweeetArray, toFile: filePath)
-                        completionBlock(success, (success ? filePath : nil))
-                    } else {
-                        completionBlock(success, nil)
+    // MARK: blogs from datalicious...
+    func fetchDataLiciousBlogFeeds(completionBlock: (Bool)->()) {
+        performAPICall("http://blog.datalicious.com/feed/", method: nil, parameters: nil) { (success: Bool, data: NSData?) in
+            if success {
+                let blogItemParser = NDBlogItemParser(xmlData: data!)
+                blogItemParser.parse()
+                let newsItemController = NDNewsItemController(moc: NDCoreDataManager.sharedManager.backgroundMOC)
+                for blogItemDictionary in blogItemParser.blogItems {
+                    if newsItemController.checkIfObjectExistInDatabaseForguid(blogItemDictionary["guid"] as! String) == false {
+                        newsItemController.insertObject(blogItemDictionary)
                     }
-                })
-            } else {
-                NSLog("Login error: %@", error!.localizedDescription);
-                completionBlock(false, nil)
+                }
+                newsItemController.saveMoc()
             }
-       }
+            completionBlock(success)
+        }
     }
     
+    // MARK: tweets from user account...
+    func fetchTweets(completionBlock: (Bool, String?)->()) {
+        searchTweets(["q":"from@datalicious"], completionBlock: { (success, tweets) in
+            if let tweeetArray = tweets {
+                var filePath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+                filePath = filePath + "/Tweets"
+                let success = NSKeyedArchiver.archiveRootObject(tweeetArray, toFile: filePath)
+                completionBlock(success, (success ? filePath : nil))
+            } else {
+                completionBlock(success, nil)
+            }
+        })
+    }
+
     func searchTweets(params: [NSObject:AnyObject], completionBlock: (Bool, [TWTRTweet]?)->()) {
         let client = TWTRAPIClient()
         let statusesShowEndpoint = "https://api.twitter.com/1.1/search/tweets.json"
@@ -73,24 +86,18 @@ class NDNetworkManager: NSObject {
             }
         }
     }
-
-    func fetchDataLiciousBlogFeeds(completionBlock: (Bool)->()) {
-        performAPICall("http://blog.datalicious.com/feed/", method: nil, parameters: nil) { (success: Bool, data: NSData?) in
-            if success {
-                let blogItemParser = NDBlogItemParser(xmlData: data!)
-                blogItemParser.parse()
-                let newsItemController = NDNewsItemController(moc: NDCoreDataManager.sharedManager.backgroundMOC)
-                for blogItemDictionary in blogItemParser.blogItems {
-                    if newsItemController.checkIfObjectExistInDatabaseForguid(blogItemDictionary["guid"] as! String) == false {
-                        newsItemController.insertObject(blogItemDictionary)
-                    }
-                }
-                newsItemController.saveMoc()
-            }
-            completionBlock(success)
+    
+    
+    // MARK: YouTube videos
+    func getYoutubeDataliciousVideos(autentication: GTMOAuth2Authentication, completionBlock: (Bool)->()) {
+        let urlString = "https://www.googleapis.com/youtube/v3/channels?part=contentDetails,snippet&forUsername=datalicious&mine=true&access_token=\(autentication.accessToken)"
+        performAPICall(urlString, method: nil, parameters: nil) { (success:Bool, data:NSData?) in
+            print(success)
         }
     }
     
+    
+    // MARK: Contacts...
     func getContactDetailsFromDatalicicous(completionBlock: (Bool)->()) {
         performAPICall("http://www.datalicious.com/contact/", method: nil, parameters: nil) { (success:Bool, data:NSData?) in
             
