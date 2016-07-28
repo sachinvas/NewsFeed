@@ -11,6 +11,9 @@ import Fabric
 import TwitterKit
 import GoogleSignIn
 
+let twitterConsumerKey = ""
+let twitterConsumerSecret = ""
+
 @UIApplicationMain
 class NDAppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -19,7 +22,7 @@ class NDAppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        Twitter.sharedInstance().startWithConsumerKey("", consumerSecret: "")
+        Twitter.sharedInstance().startWithConsumerKey(twitterConsumerKey, consumerSecret: twitterConsumerSecret)
         Fabric.with([Twitter.self])
         return true
     }
