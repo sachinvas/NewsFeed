@@ -7,44 +7,90 @@
 //
 
 import UIKit
-import GTMOAuth2
+import GoogleSignIn
+import iOS_GTLYouTube
 
 let youTubeKeyChain = "YouTubeKeyChain"
-let youTubeClientId = "1062429885959-rj7cbqmrtqh8j2uc0lujlditp9qg6p94.apps.googleusercontent.com"
-let youTubeClientSecret = ""
-let youTubeLoginURL = "https://www.googleapis.com/auth/plus.me"
+let youTubeClientId = ""
+let youTubeScopes = [
+                     "https://www.googleapis.com/auth/youtube",
+                     "https://www.googleapis.com/auth/youtube.readonly",
+                     "https://www.googleapis.com/auth/youtubepartner",
+                     "https://www.googleapis.com/auth/youtubepartner-channel-audit",
+                     "https://www.googleapis.com/auth/youtube.upload"
+                    ]
 
-class NDYouTubeViewController: UITableViewController {
+class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSignInUIDelegate {
     
-    var authentication: GTMOAuth2Authentication!
+    private var playlists:[GTLYouTubePlaylist]!
+    private var videos:[GTLYouTubeVideo]!
+    private var isShowingPlaylists: Bool = true
+    private var networkQueue: NSOperationQueue {
+        let queue = NSOperationQueue()
+        queue.qualityOfService = .Utility
+        return queue
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let auth = GTMOAuth2ViewControllerTouch.authForGoogleFromKeychainForName(youTubeKeyChain, clientID: youTubeClientId, clientSecret: youTubeClientSecret)
-        if auth.canAuthorize {
-            do {
-                try GTMOAuth2ViewControllerTouch.authorizeFromKeychainForName(youTubeKeyChain, authentication: auth)
+        GIDSignIn.sharedInstance().scopes = youTubeScopes
+        GIDSignIn.sharedInstance().clientID = youTubeClientId
+        GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().uiDelegate = self
+        GIDSignIn.sharedInstance().signIn()
+    }
     
-                authentication = auth
-                fetchYouTubeVideos()
-            } catch let error {
-                print(error)
-            }
-        } else {
-            let googleAuthViewController = GTMOAuth2ViewControllerTouch(scope: youTubeLoginURL, clientID: youTubeClientId, clientSecret: youTubeClientSecret, keychainItemName: youTubeKeyChain) {[weak self] (viewController: GTMOAuth2ViewControllerTouch!, authentication: GTMOAuth2Authentication!, error: NSError!) in
-                GTMOAuth2ViewControllerTouch.saveParamsToKeychainForName(youTubeKeyChain, authentication: authentication)
-                viewController.dismissViewControllerAnimated(true, completion: nil)
-                self?.authentication = authentication
+    func signIn(signIn: GIDSignIn!, didSignInForUser user: GIDGoogleUser!, withError error: NSError!) {
+        let urlString = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=\(user.authentication.accessToken)"
+        NDNetworkManager.sharedManager.performAPICall(urlString, method: nil, parameters: [:], headers: [:]) {[weak self] (success:Bool, data:NSData?) in
+            if success {
                 self?.fetchYouTubeVideos()
+                if let responseData = data {
+                    do {
+                        let jsonObject = try NSJSONSerialization.JSONObjectWithData(responseData, options: NSJSONReadingOptions(rawValue:0))
+                        print(jsonObject)
+                    } catch let error {
+                        print(error)
+                    }
+                }
             }
-            navigationController?.presentViewController(googleAuthViewController, animated: true, completion: nil)
         }
     }
     
+    func signIn(signIn: GIDSignIn!, didDisconnectWithUser user: GIDGoogleUser!, withError error: NSError!) {
+        
+    }
+    
+    func signInWillDispatch(signIn: GIDSignIn!, error: NSError!) {
+        
+    }
+    
+    func signIn(signIn: GIDSignIn!, presentViewController viewController: UIViewController!) {
+        let googleSignInNavController = UINavigationController(rootViewController: viewController)
+        navigationController?.presentViewController(googleSignInNavController, animated: true, completion: nil)
+    }
+    
+    func signIn(signIn: GIDSignIn!, dismissViewController viewController: UIViewController!) {
+        viewController.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     func fetchYouTubeVideos() {
-        NDNetworkManager.sharedManager.getYoutubeDataliciousVideos(authentication) { (sucess: Bool) in
-            
+        networkQueue.addOperationWithBlock {
+            NDNetworkManager.sharedManager.getYoutubeDataliciousPlaylistIds {[weak self] (sucess:Bool, playlists:[GTLYouTubePlaylist]?) in
+                dispatch_async(dispatch_get_main_queue(), {
+                    self?.playlists = playlists
+                    self?.tableView.reloadData()
+                })
+            }
         }
+    }
+    
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return (isShowingPlaylists ? self.playlists.count : self.videos.count)
     }
 }
 

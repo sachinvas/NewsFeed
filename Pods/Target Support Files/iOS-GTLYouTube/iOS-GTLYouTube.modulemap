@@ -1,0 +1,6 @@
+framework module iOS_GTLYouTube {
+  umbrella header "iOS-GTLYouTube-umbrella.h"
+
+  export *
+  module * { export * }
+}

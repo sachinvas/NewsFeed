@@ -9,22 +9,12 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>GTMOAuth2.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>GTMSessionFetcher.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>GoogleAPIClientForREST.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-News.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>iOS-GTLYouTube.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -32,17 +22,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>32A3D75343814877937B1347AF69B693</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>5792D8148B891451D4538C927C4D05A2</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>6BD244BD0FB7B261DE9F8A0E482835F5</key>
+		<key>67C49FEB25DAE6A792605917FF0E3ADE</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -52,7 +32,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D468777BEC2DE5127A16239373FFD11F</key>
+		<key>ED0A12C4F6272FAE882B1B06387C7191</key>
 		<dict>
 			<key>primary</key>
 			<true/>

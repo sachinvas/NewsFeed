@@ -9,6 +9,7 @@
 import UIKit
 import Fabric
 import TwitterKit
+import GoogleSignIn
 
 @UIApplicationMain
 class NDAppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,7 +19,7 @@ class NDAppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        Twitter.sharedInstance().startWithConsumerKey("uyBkpqDnjRIoQMrwGOG3ZaDhL", consumerSecret: "5HpHDhBppjVleRsEGZvW7oZumdfPAXqtOdtnMOogLfMNYteEZ9")
+        Twitter.sharedInstance().startWithConsumerKey("", consumerSecret: "")
         Fabric.with([Twitter.self])
         return true
     }
@@ -48,7 +49,13 @@ class NDAppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+        var sourceApp = "com.datalicious.news"
+        if #available(iOS 9.0, *) {
+            sourceApp = options[UIApplicationOpenURLOptionsSourceApplicationKey] as! String
+        }
         if Twitter.sharedInstance().application(app, openURL: url, options: options) {
+            return true
+        } else if GIDSignIn.sharedInstance().handleURL(url, sourceApplication: sourceApp, annotation: options) {
             return true
         }
         return false

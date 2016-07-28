@@ -4,6 +4,6 @@ use_frameworks!
 target 'News' do
     pod 'Alamofire', '~> 3.4'
     pod 'TwitterKit'
-    pod 'GoogleAPIClientForREST'
-    pod 'GTMOAuth2'
+    pod 'Google/SignIn'
+    pod 'iOS-GTLYouTube'
 end
