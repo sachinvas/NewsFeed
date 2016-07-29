@@ -9,10 +9,11 @@
 import Foundation
 import UIKit
 import CoreData
+import MBProgressHUD
 
 class NDBlogTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
     
-    private var loadingSpinner: UIActivityIndicatorView!
+    private var loadingSpinner: MBProgressHUD!
     
     lazy var fetchedResultsController: NSFetchedResultsController! = {
         let fetchRequest = NSFetchRequest(entityName: "BlogItem")
@@ -26,27 +27,18 @@ class NDBlogTableViewController: UITableViewController, NSFetchedResultsControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         let blogItemCell = UINib(nibName: "NDBlogItemTableViewCell", bundle: NSBundle.mainBundle())
         tableView.registerNib(blogItemCell, forCellReuseIdentifier: "BlogItemCell")
-
-        loadingSpinner = UIActivityIndicatorView()
-        loadingSpinner.activityIndicatorViewStyle = .Gray
-        let x = tableView.frame.size.width/2 - 10
-        let y = tableView.frame.size.height/2 - 10
-        loadingSpinner.frame = CGRectMake(x, y, 20, 20)
-        loadingSpinner.hidesWhenStopped = true
-        tableView.addSubview(loadingSpinner)
         
+        loadingSpinner = MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
+        loadingSpinner.label.text = "Fetching Blogs..."
         performFetch()
-        loadingSpinner.startAnimating()
         NDNetworkManager.sharedManager.fetchDataLiciousBlogFeeds({[weak self](success:Bool) -> () in
             dispatch_async(dispatch_get_main_queue(), {
-                self?.loadingSpinner.stopAnimating()
                 if success {
                     self?.performFetch()
                     self?.tableView.reloadData()
-                    
+                    self?.loadingSpinner.hideAnimated(true)
                 }
             })
         })
@@ -65,7 +57,7 @@ class NDBlogTableViewController: UITableViewController, NSFetchedResultsControll
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 175
+        return 120
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -77,23 +69,18 @@ class NDBlogTableViewController: UITableViewController, NSFetchedResultsControll
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var tableViewCell = tableView.dequeueReusableCellWithIdentifier("BlogItemCell") as? NDBlogItemTableViewCell
+        var tableViewCell = tableView.dequeueReusableCellWithIdentifier("BlogItemCell") as? NDTableViewCell
         if tableViewCell == nil {
-            tableViewCell = UITableViewCell(style: .Default, reuseIdentifier: "BlogItemCell") as? NDBlogItemTableViewCell
-        }
-        let blogItem = self.fetchedResultsController.fetchedObjects![indexPath.row] as! BlogItem
-        tableViewCell!.dateLabel.text = NDUtility.utility.newsDateDisplayFormatter.stringFromDate(blogItem.publicationDate!)
-        tableViewCell!.titleLabel.text = blogItem.title
-        dispatch_async(dispatch_get_main_queue()) {
-            do {
-                tableViewCell!.descriptionTextView.attributedText = try NSAttributedString(data: blogItem.blogDescription!.dataUsingEncoding(NSUTF8StringEncoding)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-                    NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding], documentAttributes: nil)
-            } catch let error {
-                print(error)
-            }
+            tableViewCell = UITableViewCell(style: .Default, reuseIdentifier: "BlogItemCell") as? NDTableViewCell
         }
         tableViewCell?.accessoryType = .DisclosureIndicator
         return tableViewCell!
     }
     
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        if let blogItemCell = cell as? NDTableViewCell {
+            let blogItem = self.fetchedResultsController.fetchedObjects![indexPath.row] as! BlogItem
+            blogItemCell.populateCellData(blogItem.publicationDate!, titleText: blogItem.title!, information: (text:blogItem.blogDescription!, isHTML:true), avatarImagePath: nil)
+        }
+    }
 }

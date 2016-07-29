@@ -1,8 +1,8 @@
 //
-//  BlogPreviewItem.swift
+//  YouTubeVideo.swift
 //  
 //
-//  Created by Sachin Vas on 7/25/16.
+//  Created by Sachin Vas on 7/29/16.
 //
 //
 
@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 
-class BlogPreviewItem: NSManagedObject {
+class YouTubeVideo: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
 

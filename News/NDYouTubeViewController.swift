@@ -9,6 +9,8 @@
 import UIKit
 import GoogleSignIn
 import iOS_GTLYouTube
+import MBProgressHUD
+import CoreData
 
 let youTubeKeyChain = "YouTubeKeyChain"
 let youTubeClientId = ""
@@ -20,11 +22,19 @@ let youTubeScopes = [
                      "https://www.googleapis.com/auth/youtube.upload"
                     ]
 
-class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSignInUIDelegate {
+class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSignInUIDelegate, NSFetchedResultsControllerDelegate {
     
-    private var playlists:[GTLYouTubePlaylist]!
-    private var videos:[GTLYouTubeVideo]!
-    private var isShowingPlaylists: Bool = true
+    lazy private var fetchedResultsController: NSFetchedResultsController! = {
+        let fetchRequest = NSFetchRequest(entityName: "YouTubeVideo")
+        fetchRequest.fetchLimit = 10
+        let sortDescriptor = NSSortDescriptor(key: "position", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        let fetchResultController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: NDCoreDataManager.sharedManager.mainQueueMOC, sectionNameKeyPath: nil, cacheName: nil)
+        fetchResultController.delegate = self
+        return fetchResultController
+    }()
+
+    var activityView: MBProgressHUD!
     private var networkQueue: NSOperationQueue {
         let queue = NSOperationQueue()
         queue.qualityOfService = .Utility
@@ -33,28 +43,31 @@ class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSign
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        activityView = MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
+        activityView.label.text = "YouTube"
+        activityView.detailsLabel.text = "Signing In..."
         GIDSignIn.sharedInstance().scopes = youTubeScopes
         GIDSignIn.sharedInstance().clientID = youTubeClientId
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
-        GIDSignIn.sharedInstance().signIn()
+        if GIDSignIn.sharedInstance().hasAuthInKeychain() {
+            GIDSignIn.sharedInstance().signInSilently()
+        } else {
+            GIDSignIn.sharedInstance().signIn()
+        }
+    }
+    
+    func performFetch() {
+        do {
+            try fetchedResultsController.performFetch()
+        } catch let error {
+            print(error)
+        }
     }
     
     func signIn(signIn: GIDSignIn!, didSignInForUser user: GIDGoogleUser!, withError error: NSError!) {
-        let urlString = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=\(user.authentication.accessToken)"
-        NDNetworkManager.sharedManager.performAPICall(urlString, method: nil, parameters: [:], headers: [:]) {[weak self] (success:Bool, data:NSData?) in
-            if success {
-                self?.fetchYouTubeVideos()
-                if let responseData = data {
-                    do {
-                        let jsonObject = try NSJSONSerialization.JSONObjectWithData(responseData, options: NSJSONReadingOptions(rawValue:0))
-                        print(jsonObject)
-                    } catch let error {
-                        print(error)
-                    }
-                }
-            }
-        }
+        fetchYouTubeVideos()
+        activityView.detailsLabel.text = "Fetching Videos..."
     }
     
     func signIn(signIn: GIDSignIn!, didDisconnectWithUser user: GIDGoogleUser!, withError error: NSError!) {
@@ -76,9 +89,10 @@ class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSign
     
     func fetchYouTubeVideos() {
         networkQueue.addOperationWithBlock {
-            NDNetworkManager.sharedManager.getYoutubeDataliciousPlaylistIds {[weak self] (sucess:Bool, playlists:[GTLYouTubePlaylist]?) in
+            NDNetworkManager.sharedManager.getYouTubeDataliciousVideos {[weak self] (sucess:Bool) in
                 dispatch_async(dispatch_get_main_queue(), {
-                    self?.playlists = playlists
+                    self?.activityView.hidden = true
+                    self?.performFetch()
                     self?.tableView.reloadData()
                 })
             }
@@ -90,7 +104,27 @@ class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSign
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (isShowingPlaylists ? self.playlists.count : self.videos.count)
+        var numOfRowsInSection = 0
+        if let count = self.fetchedResultsController.fetchedObjects?.count {
+            numOfRowsInSection = count
+        }
+        return numOfRowsInSection
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        var tableViewCell = tableView.dequeueReusableCellWithIdentifier("YouTubeVideoCell") as? NDTableViewCell
+        if tableViewCell == nil {
+            tableViewCell = UITableViewCell(style: .Default, reuseIdentifier: "YouTubeVideoCell") as? NDTableViewCell
+        }
+        tableViewCell?.accessoryType = .DisclosureIndicator
+        return tableViewCell!
+    }
+    
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        if let blogItemCell = cell as? NDTableViewCell {
+            let youTubeVideo = self.fetchedResultsController.fetchedObjects![indexPath.row] as! YouTubeVideo
+            blogItemCell.populateCellData(youTubeVideo.publishedAt!, titleText: youTubeVideo.title!, information: (text:youTubeVideo.videoDescription!, isHTML:false), avatarImagePath: nil)
+        }
     }
 }
 

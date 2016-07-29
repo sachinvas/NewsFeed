@@ -8,7 +8,7 @@
 
 import Foundation
 import CoreData
-
+import iOS_GTLYouTube
 
 class NDNewsItemController: NSObject {
     var managedObjectContext: NSManagedObjectContext!
@@ -17,7 +17,7 @@ class NDNewsItemController: NSObject {
         super.init()
     }
     
-    func insertObject(objectDictionary: Dictionary<String, AnyObject>) {
+    func insertBlogObject(objectDictionary: Dictionary<String, AnyObject>) {
         let blogItem:BlogItem = NSEntityDescription.insertNewObjectForEntityForName("BlogItem", inManagedObjectContext: managedObjectContext) as! BlogItem
         blogItem.linkURL = objectDictionary["link"] as? String
         blogItem.title = objectDictionary["title"] as? String
@@ -54,24 +54,29 @@ class NDNewsItemController: NSObject {
         }
     }
     
-    func checkIfObjectExistInDatabaseForguid(guid: NSString) -> Bool {
+    func insertYouTubeVideoObject(snippet:GTLYouTubePlaylistItemSnippet) {
+        let youTubeVideo:YouTubeVideo = NSEntityDescription.insertNewObjectForEntityForName("YouTubeVideo", inManagedObjectContext: managedObjectContext) as! YouTubeVideo
+        youTubeVideo.position = snippet.position
+        youTubeVideo.title = snippet.title
+        youTubeVideo.videoDescription = snippet.description
+        youTubeVideo.videoId = snippet.resourceId.videoId
+        youTubeVideo.publishedAt = snippet.publishedAt.date
+        youTubeVideo.thumbnailPath = snippet.thumbnails.additionalPropertyForName("medium") as? String
+    }
+    
+    func checkIfObjectExistInDatabase(entityName:String, predicate: NSPredicate) -> Bool {
         var objectExist:Bool = false
-        let subStrings = guid.componentsSeparatedByString("=")
-        if subStrings.count > 1 {
-            if let blogId = Int(subStrings[1]) {
-                let fetchRequest = NSFetchRequest(entityName: "BlogItem")
-                fetchRequest.predicate = NSPredicate(format: "blogId = %d", blogId)
-                fetchRequest.resultType = .CountResultType
-                do {
-                    if let result = try managedObjectContext.executeRequest(fetchRequest) as? NSAsynchronousFetchResult {
-                        if let resultArray = result.finalResult {
-                            objectExist = resultArray[0] as! Int > 0
-                        }
-                    }
-                } catch let error {
-                    print(error)
+        let fetchRequest = NSFetchRequest(entityName: entityName)
+        fetchRequest.predicate = predicate
+        fetchRequest.resultType = .CountResultType
+        do {
+            if let result = try managedObjectContext.executeRequest(fetchRequest) as? NSAsynchronousFetchResult {
+                if let resultArray = result.finalResult {
+                    objectExist = resultArray[0] as! Int > 0
                 }
             }
+        } catch let error {
+            print(error)
         }
         return objectExist
     }

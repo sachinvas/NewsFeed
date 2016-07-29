@@ -41,8 +41,10 @@ class NDNetworkManager: NSObject {
                 blogItemParser.parse()
                 let newsItemController = NDNewsItemController(moc: NDCoreDataManager.sharedManager.backgroundMOC)
                 for blogItemDictionary in blogItemParser.blogItems {
-                    if newsItemController.checkIfObjectExistInDatabaseForguid(blogItemDictionary["guid"] as! String) == false {
-                        newsItemController.insertObject(blogItemDictionary)
+                    let blogId = blogItemDictionary["guid"] as! String
+                    let predicate = NSPredicate(format: "blogId=%@", blogId)
+                    if newsItemController.checkIfObjectExistInDatabase("BlogItem", predicate:predicate) == false {
+                        newsItemController.insertBlogObject(blogItemDictionary)
                     }
                 }
                 newsItemController.saveMoc()
@@ -102,39 +104,73 @@ class NDNetworkManager: NSObject {
     
     
     // MARK: YouTube videos
-    func getYoutubeDataliciousPlaylistIds(completionBlock: (Bool, [GTLYouTubePlaylist]?)->()) {
-        getAllRelatedPlayListsOfDataliciousFromYouTube {[weak self] (success:Bool, relatedPlaylist:GTLYouTubeChannelContentDetailsRelatedPlaylists?) in
+    func getYouTubeDataliciousVideos(completionBlock:(Bool)->()) {
+        getYoutubeDataliciousUploadPlaylistId {[unowned self] (success:Bool, playlistid:String?) in
             if success {
-                var count:Int = 0
-                var playlists = [GTLYouTubePlaylist]()
-                count = count + 1
-                self?.newtworkQueue.addOperationWithBlock({
-                    self?.getPlaylistItemForplaylistId(relatedPlaylist!.favorites, completionBlock: { (success:Bool, obtainedPlaylist:GTLYouTubePlaylist?) in
-                        if success {
-                            if let playlist = obtainedPlaylist {
-                                playlists += [playlist]
-                            }
-                        }
-                        count = count - 1
+                if let id = playlistid {
+                    self.getYouTubeVideosForPlaylistItemId(id, pageToken: nil, completionBlock: { (success:Bool) in
+                        
                     })
-                })
-                count = count + 1
-                self?.newtworkQueue.addOperationWithBlock({
-                    self?.getPlaylistItemForplaylistId(relatedPlaylist!.likes, completionBlock: { (success:Bool, obtainedPlaylist:GTLYouTubePlaylist?) in
-                        if success {
-                            if let playlist = obtainedPlaylist {
-                                playlists += [playlist]
+                } else {
+                    completionBlock(false)
+                }
+            }
+        }
+    }
+    
+    func getYouTubeVideosForPlaylistItemId(playlistItemId:String, pageToken:String?, completionBlock:(Bool)->()) {
+        var playlistItemURLString = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&playlistId=\(playlistItemId)&"
+        playlistItemURLString = playlistItemURLString + (pageToken != nil ? "pageToken=\(pageToken!)&key=\(googleAPIKey)" : "key=\(googleAPIKey)")
+        let playlistItemURL = NSURL(string: playlistItemURLString)
+        dispatch_async(dispatch_get_main_queue()) {[unowned self] in
+            self.gtlServiceYouTube.fetchObjectWithURL(playlistItemURL, completionHandler: { (ticket:GTLServiceTicket!, object:AnyObject!, error:NSError!) in
+                self.newtworkQueue.addOperationWithBlock({
+                    if error == nil {
+                        if let listResponse = object as? GTLYouTubePlaylistItemListResponse {
+                            if let items = listResponse.items() as? Array<GTLYouTubePlaylistItem> {
+                                let newsItemController = NDNewsItemController(moc: NDCoreDataManager.sharedManager.backgroundMOC)
+                                for playlist in items {
+                                    let videoId = playlist.snippet.resourceId.videoId
+                                    let predicate = NSPredicate(format: "videoId = %@", videoId)
+                                    if !newsItemController.checkIfObjectExistInDatabase("YouTubeVideo", predicate: predicate) {
+                                        newsItemController.insertYouTubeVideoObject(playlist.snippet)
+                                    }
+                                }
+                                newsItemController.saveMoc()
+                                if listResponse.nextPageToken != nil {
+                                    self.getYouTubeVideosForPlaylistItemId(playlistItemId, pageToken: listResponse.nextPageToken, completionBlock: { (success:Bool) in
+                                        completionBlock(success)
+                                    })
+                                } else {
+                                    completionBlock(true)
+                                }
+                            } else {
+                                print("No items found")
+                                completionBlock(false)
                             }
+                        } else {
+                            print("listResponse is not GTLYouTubeChannelListResponse")
+                            completionBlock(false)
                         }
-                        count = count - 1
-                    })
+                    } else {
+                        print(error)
+                        completionBlock(false)
+                    }
                 })
-                count = count + 1
-                self?.newtworkQueue.addOperationWithBlock({
-                    self?.getPlaylistItemForplaylistId(relatedPlaylist!.uploads, completionBlock: { (success:Bool, obtainedPlaylist:GTLYouTubePlaylist?) in
+            })
+        }
+    }
+    
+    private func getYoutubeDataliciousUploadPlaylistId(completionBlock: (Bool, String?)->()) {
+        getAllRelatedPlayListsOfDataliciousFromYouTube {[unowned self] (success:Bool, relatedPlaylist:GTLYouTubeChannelContentDetailsRelatedPlaylists?) in
+            if success {
+                var count:Int = 1
+                var uploadPlaylist: GTLYouTubePlaylist! = nil
+                self.newtworkQueue.addOperationWithBlock({
+                    self.getPlaylistItemForplaylistId(relatedPlaylist!.uploads, completionBlock: { (success:Bool, obtainedPlaylist:GTLYouTubePlaylist?) in
                         if success {
                             if let playlist = obtainedPlaylist {
-                                playlists += [playlist]
+                                uploadPlaylist = playlist
                             }
                         }
                         count = count - 1
@@ -142,7 +178,11 @@ class NDNetworkManager: NSObject {
                 })
                 while count != 0 {
                 }
-                completionBlock(true, playlists)
+                if let uploadPlaylistId = uploadPlaylist.identifier {
+                    completionBlock(true, uploadPlaylistId)
+                } else {
+                    completionBlock(false, nil)
+                }
             } else {
                 completionBlock(false, nil)
             }
@@ -156,9 +196,9 @@ class NDNetworkManager: NSObject {
         }
         let playlistURLString = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=\(playlistId)&key=\(googleAPIKey)"
         let playlistURL = NSURL(string: playlistURLString)
-        dispatch_async(dispatch_get_main_queue()) {[weak self] in
-            self?.gtlServiceYouTube.fetchObjectWithURL(playlistURL) { (ticket:GTLServiceTicket!, object:AnyObject!, error:NSError!) in
-                self?.newtworkQueue.addOperationWithBlock({
+        dispatch_async(dispatch_get_main_queue()) {[unowned self] in
+            self.gtlServiceYouTube.fetchObjectWithURL(playlistURL) { (ticket:GTLServiceTicket!, object:AnyObject!, error:NSError!) in
+                self.newtworkQueue.addOperationWithBlock({
                     if error == nil {
                         if let listResponse = object as? GTLYouTubePlaylistListResponse {
                             if let items = listResponse.items() {
@@ -191,14 +231,14 @@ class NDNetworkManager: NSObject {
     }
     
     private func getAllRelatedPlayListsOfDataliciousFromYouTube(completionBlock:(Bool, GTLYouTubeChannelContentDetailsRelatedPlaylists?)->()) {
-        getChannelIdOfDataliciousFromYouTube {[weak self] (success:Bool, channelId:String?) in
+        getChannelIdOfDataliciousFromYouTube {[unowned self] (success:Bool, channelId:String?) in
             if success {
                 let channelId = channelId!
                 let channelURLString = "https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=\(channelId)&key=\(googleAPIKey)"
                 let channelURL = NSURL(string: channelURLString)
                 dispatch_async(dispatch_get_main_queue(), {
-                    self?.gtlServiceYouTube.fetchObjectWithURL(channelURL, completionHandler: { (ticket:GTLServiceTicket!, object:AnyObject!, error:NSError!) in
-                        self?.newtworkQueue.addOperationWithBlock({
+                    self.gtlServiceYouTube.fetchObjectWithURL(channelURL, completionHandler: { (ticket:GTLServiceTicket!, object:AnyObject!, error:NSError!) in
+                        self.newtworkQueue.addOperationWithBlock({
                             if error == nil {
                                 if let listResponse = object as? GTLYouTubeChannelListResponse {
                                     if let items = listResponse.items() {
@@ -238,9 +278,9 @@ class NDNetworkManager: NSObject {
     private func getChannelIdOfDataliciousFromYouTube(completionBlock:(Bool, String?)->()) {
         let urlString = "https://www.googleapis.com/youtube/v3/channels?part=id&forUsername=datalicious&key=\(googleAPIKey)"
         let url = NSURL(string: urlString)
-        dispatch_async(dispatch_get_main_queue()) {[weak self] in
-            self?.gtlServiceYouTube.fetchObjectWithURL(url) { (ticket:GTLServiceTicket!, object:AnyObject!, error:NSError!) in
-                self?.newtworkQueue.addOperationWithBlock({
+        dispatch_async(dispatch_get_main_queue()) {[unowned self] in
+            self.gtlServiceYouTube.fetchObjectWithURL(url) { (ticket:GTLServiceTicket!, object:AnyObject!, error:NSError!) in
+                self.newtworkQueue.addOperationWithBlock({
                     if error == nil {
                         if let listResponse = object as? GTLYouTubeChannelListResponse {
                             if let items = listResponse.items() {

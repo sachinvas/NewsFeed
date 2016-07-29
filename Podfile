@@ -6,4 +6,5 @@ target 'News' do
     pod 'TwitterKit'
     pod 'Google/SignIn'
     pod 'iOS-GTLYouTube'
+    pod 'MBProgressHUD'
 end

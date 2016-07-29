@@ -19,7 +19,6 @@ extension Account {
     @NSManaged var name: String?
     @NSManaged var userName: String?
     @NSManaged var accountDetails: AnyObject?
-    @NSManaged var blogPreviewItem: BlogPreviewItem?
 
     override static func initialize() {
         if self.isKindOfClass(Account) {
