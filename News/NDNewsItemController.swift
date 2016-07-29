@@ -54,14 +54,14 @@ class NDNewsItemController: NSObject {
         }
     }
     
-    func insertYouTubeVideoObject(snippet:GTLYouTubePlaylistItemSnippet) {
+    func insertYouTubeVideoObject(snippet:GTLYouTubePlaylistItemSnippet, videoId: String) {
         let youTubeVideo:YouTubeVideo = NSEntityDescription.insertNewObjectForEntityForName("YouTubeVideo", inManagedObjectContext: managedObjectContext) as! YouTubeVideo
         youTubeVideo.position = snippet.position
         youTubeVideo.title = snippet.title
-        youTubeVideo.videoDescription = snippet.description
-        youTubeVideo.videoId = snippet.resourceId.videoId
+        youTubeVideo.videoDescription = snippet.descriptionProperty
+        youTubeVideo.videoId = videoId
         youTubeVideo.publishedAt = snippet.publishedAt.date
-        youTubeVideo.thumbnailPath = snippet.thumbnails.additionalPropertyForName("medium") as? String
+        youTubeVideo.thumbnailPath = (snippet.thumbnails.additionalPropertyForName("medium") as? GTLYouTubeThumbnail)?.url
     }
     
     func checkIfObjectExistInDatabase(entityName:String, predicate: NSPredicate) -> Bool {

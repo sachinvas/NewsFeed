@@ -43,6 +43,9 @@ class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSign
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let blogItemCell = UINib(nibName: "NDTableViewCell", bundle: NSBundle.mainBundle())
+        tableView.registerNib(blogItemCell, forCellReuseIdentifier: "YouTubeVideoCell")
+        
         activityView = MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
         activityView.label.text = "YouTube"
         activityView.detailsLabel.text = "Signing In..."
@@ -103,6 +106,10 @@ class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSign
         return 1
     }
     
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 120
+    }
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var numOfRowsInSection = 0
         if let count = self.fetchedResultsController.fetchedObjects?.count {
@@ -121,9 +128,9 @@ class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSign
     }
     
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        if let blogItemCell = cell as? NDTableViewCell {
+        if let youTubeVideoCell = cell as? NDTableViewCell {
             let youTubeVideo = self.fetchedResultsController.fetchedObjects![indexPath.row] as! YouTubeVideo
-            blogItemCell.populateCellData(youTubeVideo.publishedAt!, titleText: youTubeVideo.title!, information: (text:youTubeVideo.videoDescription!, isHTML:false), avatarImagePath: nil)
+            youTubeVideoCell.populateCellData(youTubeVideo.publishedAt!, titleText: youTubeVideo.title!, information: (text:youTubeVideo.videoDescription!, isHTML:false), avatarImagePath: youTubeVideo.thumbnailPath)
         }
     }
 }

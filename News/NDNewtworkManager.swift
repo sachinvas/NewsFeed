@@ -41,7 +41,7 @@ class NDNetworkManager: NSObject {
                 blogItemParser.parse()
                 let newsItemController = NDNewsItemController(moc: NDCoreDataManager.sharedManager.backgroundMOC)
                 for blogItemDictionary in blogItemParser.blogItems {
-                    let blogId = blogItemDictionary["guid"] as! String
+                    let blogId = (blogItemDictionary["guid"] as! String).componentsSeparatedByString("=")[1]
                     let predicate = NSPredicate(format: "blogId=%@", blogId)
                     if newsItemController.checkIfObjectExistInDatabase("BlogItem", predicate:predicate) == false {
                         newsItemController.insertBlogObject(blogItemDictionary)
@@ -108,9 +108,22 @@ class NDNetworkManager: NSObject {
         getYoutubeDataliciousUploadPlaylistId {[unowned self] (success:Bool, playlistid:String?) in
             if success {
                 if let id = playlistid {
-                    self.getYouTubeVideosForPlaylistItemId(id, pageToken: nil, completionBlock: { (success:Bool) in
-                        
-                    })
+                    var pageToken:String? = nil
+                    while true {
+                        var count:Int = 1
+                        self.getYouTubeVideosForPlaylistItemId(id, pageToken: pageToken, completionBlock: { (success:Bool, nextPageToken:String?) in
+                            if success {
+                                pageToken = nextPageToken
+                            }
+                            count = count - 1
+                        })
+                        while count != 0 {
+                        }
+                        if pageToken == nil {
+                            break
+                        }
+                    }
+                    completionBlock(true)
                 } else {
                     completionBlock(false)
                 }
@@ -118,11 +131,11 @@ class NDNetworkManager: NSObject {
         }
     }
     
-    func getYouTubeVideosForPlaylistItemId(playlistItemId:String, pageToken:String?, completionBlock:(Bool)->()) {
-        var playlistItemURLString = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&playlistId=\(playlistItemId)&"
-        playlistItemURLString = playlistItemURLString + (pageToken != nil ? "pageToken=\(pageToken!)&key=\(googleAPIKey)" : "key=\(googleAPIKey)")
-        let playlistItemURL = NSURL(string: playlistItemURLString)
+    func getYouTubeVideosForPlaylistItemId(playlistItemId:String, pageToken:String?, completionBlock:(Bool, String?)->()) {
         dispatch_async(dispatch_get_main_queue()) {[unowned self] in
+            var playlistItemURLString = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&playlistId=\(playlistItemId)&"
+            playlistItemURLString = playlistItemURLString + (pageToken != nil ? "pageToken=\(pageToken!)&key=\(googleAPIKey)" : "key=\(googleAPIKey)")
+            let playlistItemURL = NSURL(string: playlistItemURLString)
             self.gtlServiceYouTube.fetchObjectWithURL(playlistItemURL, completionHandler: { (ticket:GTLServiceTicket!, object:AnyObject!, error:NSError!) in
                 self.newtworkQueue.addOperationWithBlock({
                     if error == nil {
@@ -130,31 +143,25 @@ class NDNetworkManager: NSObject {
                             if let items = listResponse.items() as? Array<GTLYouTubePlaylistItem> {
                                 let newsItemController = NDNewsItemController(moc: NDCoreDataManager.sharedManager.backgroundMOC)
                                 for playlist in items {
-                                    let videoId = playlist.snippet.resourceId.videoId
+                                    let videoId = playlist.contentDetails.videoId
                                     let predicate = NSPredicate(format: "videoId = %@", videoId)
                                     if !newsItemController.checkIfObjectExistInDatabase("YouTubeVideo", predicate: predicate) {
-                                        newsItemController.insertYouTubeVideoObject(playlist.snippet)
+                                        newsItemController.insertYouTubeVideoObject(playlist.snippet, videoId: videoId)
                                     }
                                 }
                                 newsItemController.saveMoc()
-                                if listResponse.nextPageToken != nil {
-                                    self.getYouTubeVideosForPlaylistItemId(playlistItemId, pageToken: listResponse.nextPageToken, completionBlock: { (success:Bool) in
-                                        completionBlock(success)
-                                    })
-                                } else {
-                                    completionBlock(true)
-                                }
+                                completionBlock(true, listResponse.nextPageToken)
                             } else {
                                 print("No items found")
-                                completionBlock(false)
+                                completionBlock(false, nil)
                             }
                         } else {
-                            print("listResponse is not GTLYouTubeChannelListResponse")
-                            completionBlock(false)
+                            print("listResponse is not GTLYouTubeChannelListResponse \(object)")
+                            completionBlock(false, nil)
                         }
                     } else {
                         print(error)
-                        completionBlock(false)
+                        completionBlock(false, nil)
                     }
                 })
             })

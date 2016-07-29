@@ -27,7 +27,7 @@ class NDBlogTableViewController: UITableViewController, NSFetchedResultsControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let blogItemCell = UINib(nibName: "NDBlogItemTableViewCell", bundle: NSBundle.mainBundle())
+        let blogItemCell = UINib(nibName: "NDTableViewCell", bundle: NSBundle.mainBundle())
         tableView.registerNib(blogItemCell, forCellReuseIdentifier: "BlogItemCell")
         
         loadingSpinner = MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)

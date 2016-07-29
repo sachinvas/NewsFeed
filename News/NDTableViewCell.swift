@@ -32,7 +32,7 @@ class NDTableViewCell: UITableViewCell {
                 }
                 })
         } else {
-            informationLabel.text = information.text
+            informationLabel.hidden = true
         }
         if let avatarImagePath = avatarImagePath {
             NDNetworkManager.sharedManager.performAPICall(avatarImagePath, method: nil, parameters: [:], headers: [:], withCompletionBlock: {[weak self] (success:Bool, data:NSData?) in
@@ -48,9 +48,7 @@ class NDTableViewCell: UITableViewCell {
                 })
         } else {
             dateLabelLeadingConstraint.constant = 0.0
-            if avatarImageView != nil {
-                avatarImageView.removeFromSuperview()
-            }
+            avatarImageView.hidden = true
         }
     }
 }
