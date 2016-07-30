@@ -8,26 +8,22 @@
 
 import UIKit
 import TwitterKit
+import MBProgressHUD
 
 
 class NDTwitterViewController: UITableViewController {
     
     var tweets: [TWTRTweet]! = []
     var session: TWTRSession!
-    var activityIndicator: UIActivityIndicatorView!
+    var activityView: MBProgressHUD!
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
-        activityIndicator = UIActivityIndicatorView(frame: CGRectMake(0,0,20,20))
-        activityIndicator.activityIndicatorViewStyle = .Gray
-        activityIndicator.center = tableView.center
-        activityIndicator.hidesWhenStopped = true
-        
-        tableView.addSubview(activityIndicator)
-        
-        activityIndicator.startAnimating()
+        activityView = MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
+        activityView.label.text = "Twitter"
+        activityView.detailsLabel.text = "Signing In..."
         
         if let session: TWTRSession = Twitter.sharedInstance().sessionStore.existingUserSessions().count > 0 ? Twitter.sharedInstance().sessionStore.existingUserSessions()[0] as? TWTRSession : nil {
             let error:NSError = NSError(domain: "", code: -999, userInfo: nil)
@@ -58,9 +54,11 @@ class NDTwitterViewController: UITableViewController {
     }
     
     func fetchTweets() {
+        activityView.detailsLabel.text = "Fetching Tweets..."
         NDNetworkManager.sharedManager.fetchTweets {[weak self] (success: Bool, filePath: String?) in
             dispatch_async(dispatch_get_main_queue(), {
-                self?.activityIndicator.stopAnimating()
+                self?.activityView.hidden = true
+                self?.activityView.hideAnimated(true)
                 if success {
                     if let tweetArray = NSKeyedUnarchiver.unarchiveObjectWithFile(filePath!) as? Array<TWTRTweet> {
                         self?.tweets = tweetArray
@@ -77,7 +75,7 @@ class NDTwitterViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var numOfRows = 0
-        if !activityIndicator.isAnimating() {
+        if activityView.hidden {
             numOfRows = self.tweets.count
         }
         return numOfRows

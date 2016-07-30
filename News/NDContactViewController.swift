@@ -9,17 +9,97 @@
 import UIKit
 import MapKit
 import CoreLocation
+import CoreData
 
 let rowHeight: CGFloat = 50.0; //Row Height from storyboard
 
 class NDContactViewController: UITableViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
+    @IBOutlet weak var navigationLabel: UILabel!
+    @IBOutlet weak var websiteLabel: UILabel!
+    @IBOutlet weak var emailId: UILabel!
+    @IBOutlet weak var phoneNumberLabel: UILabel!
+    private var locationManager:CLLocationManager!
+    private var mapViewRect: CGRect!
+    private var nearByContact: Contact!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NDNetworkManager.sharedManager.getContactDetailsFromDatalicicous { (success:Bool) in
-            
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        if CLLocationManager.authorizationStatus() == .NotDetermined {
+            locationManager.requestWhenInUseAuthorization()
         }
+        
+        NDNetworkManager.sharedManager.getContactDetailsFromDatalicicous {[weak self] (success:Bool) in
+            dispatch_async(dispatch_get_main_queue(), {
+            })
+        }
+    }
+    
+    func updateTableView() {
+        navigationLabel.text = self.nearByContact.address
+        websiteLabel.text = "http://www.datalicious.com/"
+        emailId.text = self.nearByContact.emailId
+        phoneNumberLabel.text = self.nearByContact.phoneNumber
+    }
+    
+    func contactNearToUserLocation() -> Contact? {
+        let fetchRequest = NSFetchRequest(entityName: "Contact")
+        let sortDescriptor = NSSortDescriptor(key: "latitude", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        fetchRequest.resultType = .ManagedObjectResultType
+        var closestContact: Contact?
+        var smallestDistance: CLLocationDistance?
+        do {
+            let fetchedObjects = try NDCoreDataManager.sharedManager.mainQueueMOC.executeFetchRequest(fetchRequest)
+            if let fetchedObjects = fetchedObjects as? Array<Contact> {
+                for contact in fetchedObjects {
+                    let location = CLLocation(latitude: contact.latitude!.doubleValue, longitude: contact.longitude!.doubleValue)
+                    let distance = mapView.userLocation.location?.distanceFromLocation(location)
+                    if smallestDistance == nil || distance < smallestDistance {
+                        closestContact = contact
+                        smallestDistance = distance!
+                    }
+                }
+            }
+        } catch let error {
+            print(error)
+        }
+        print("closestLocation: \(closestContact), distance: \(smallestDistance)")
+        return closestContact
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if mapViewRect != nil {
+            configureMapView()
+        }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        purgeMapView()
+    }
+    
+    func purgeMapView() {
+        autoreleasepool {
+            locationManager.delegate = nil
+            tableView.tableHeaderView = nil
+            mapView.showsUserLocation = false
+            mapView.delegate = nil
+            mapView.removeFromSuperview()
+            mapView = nil
+        }
+    }
+    
+    func configureMapView() {
+        mapView = MKMapView()
+        mapView.frame = mapViewRect
+        mapView.mapType = .Standard
+        mapView.delegate = self
+        mapView.showsUserLocation = true
+        locationManager.delegate = self
     }
     
     var navigationBarHeight:CGFloat {
@@ -32,20 +112,19 @@ class NDContactViewController: UITableViewController, CLLocationManagerDelegate,
         }
     }
     
-    let mapView:MKMapView = MKMapView()
+    var mapView:MKMapView!
     var pointAnnotation:MKPointAnnotation?
     
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if mapView.frame == CGRectZero {
-            mapView.frame = CGRect(x: 0.0, y: navigationBarHeight, width: tableView.frame.size.width, height: tableView.frame.size.height - 5*rowHeight - navigationBarHeight)
-            mapView.mapType = .Standard
-            mapView.delegate = self
-            mapView.zoomEnabled = true
-            mapView.scrollEnabled = true
-            mapView.showsUserLocation = true
-            mapView.userTrackingMode = .Follow
+        if mapView == nil {
+            mapViewRect = CGRect(x: 0.0, y: navigationBarHeight, width: tableView.frame.size.width, height: tableView.frame.size.height - 5*rowHeight - navigationBarHeight)
+            configureMapView()
         }
         return mapView
+    }
+    
+    func locationManager(manager: CLLocationManager, didUpdateToLocation newLocation: CLLocation, fromLocation oldLocation: CLLocation) {
+        mapView.centerCoordinate = newLocation.coordinate
     }
     
     func mapView(mapView: MKMapView, didUpdateUserLocation userLocation: MKUserLocation) {
@@ -55,6 +134,10 @@ class NDContactViewController: UITableViewController, CLLocationManagerDelegate,
         if pointAnnotation == nil {
             pointAnnotation = MKPointAnnotation()
             mapView.addAnnotation(pointAnnotation!)
+            if nearByContact == nil {
+                nearByContact = contactNearToUserLocation()
+                updateTableView()
+            }
         }
         pointAnnotation!.coordinate = userLocation.coordinate
     }

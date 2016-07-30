@@ -12,8 +12,9 @@ import Alamofire
 import TwitterKit
 import GoogleSignIn
 import iOS_GTLYouTube
+import hpple
 
-let googleAPIKey = ""
+let googleAPIKey = "AIzaSyA-X_X4yS9ZMNUGjU_yo2EgYgqyJm4ZWqc"
 
 class NDNetworkManager: NSObject {
     
@@ -128,6 +129,8 @@ class NDNetworkManager: NSObject {
                 } else {
                     completionBlock(false)
                 }
+            } else {
+                completionBlock(false)
             }
         }
     }
@@ -324,7 +327,39 @@ class NDNetworkManager: NSObject {
     // MARK: Contacts...
     func getContactDetailsFromDatalicicous(completionBlock: (Bool)->()) {
         performAPICall("http://www.datalicious.com/contact/", method: nil, parameters: [:], headers: [:]) { (success:Bool, data:NSData?) in
-            
+            if success {
+                if let data = data {
+                    let hppleParser = TFHpple(HTMLData: data)
+                    let rootXElements = hppleParser.searchWithXPathQuery("/html/body/div/main/section[@class='addresses-section']/div/div/div")
+                    let newsController = NDNewsItemController(moc: NDCoreDataManager.sharedManager.backgroundMOC)
+                    for contactElement in rootXElements {
+                        if let contactElement = contactElement as? TFHppleElement {
+                            var mapURL: String = ""
+                            if contactElement.children.count > 7 {
+                                if let element = contactElement.children[7] as? TFHppleElement {
+                                    if let mapUrlString = element.attributes["href"] as? String {
+                                        mapURL = mapUrlString
+                                    }
+                                }
+                            }
+                            var contactAlreadyExists = false
+                            if mapURL.characters.count > 0 {
+                                let predicate = NSPredicate(format: "mapURL=%@", mapURL)
+                                contactAlreadyExists = newsController.checkIfObjectExistInDatabase("Contact", predicate: predicate)
+                            }
+                            if !contactAlreadyExists {
+                                newsController.insertContactObject(contactElement, mapURLString: mapURL)
+                            }
+                        }
+                    }
+                    newsController.saveMoc()
+                    completionBlock(true)
+                } else {
+                    completionBlock(false)
+                }
+            } else {
+                completionBlock(false)
+            }
         }
     }
     

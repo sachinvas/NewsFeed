@@ -24,6 +24,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>hpple.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>iOS-GTLYouTube.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -32,7 +37,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>1E8D450C9B0EE1FD917ED6A59E238F22</key>
+		<key>0776D389500DD720C23C5DAA34EEF869</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0A4CE8F6E9820EC87B2A3B8B9770F62B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -42,7 +52,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8AFCA4EB91C08CE564D167DA0AF593F4</key>
+		<key>D635F027F0A6FD04B98B790907265430</key>
 		<dict>
 			<key>primary</key>
 			<true/>

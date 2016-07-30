@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import iOS_GTLYouTube
+import hpple
 
 class NDNewsItemController: NSObject {
     var managedObjectContext: NSManagedObjectContext!
@@ -64,6 +65,64 @@ class NDNewsItemController: NSObject {
         youTubeVideo.thumbnailPath = (snippet.thumbnails.additionalPropertyForName("medium") as? GTLYouTubeThumbnail)?.url
     }
     
+    func insertContactObject(contactElement:TFHppleElement, mapURLString: String) {
+        let contact:Contact = NSEntityDescription.insertNewObjectForEntityForName("Contact", inManagedObjectContext: managedObjectContext) as! Contact
+        //Second element contains the name information...
+        if contactElement.children.count > 1 {
+            if let element = contactElement.children[1] as? TFHppleElement {
+                //Zero element name of the city...
+                if element.children.count > 0 {
+                    if let nameElement = element.children[0] as? TFHppleElement {
+                        contact.placeName = nameElement.content
+                    }
+                }
+            }
+        }
+        //Third element contains the address information...
+        if contactElement.children.count > 3 {
+            if let element = contactElement.children[3] as? TFHppleElement {
+                //Zero element Area...
+                if element.children.count > 0 {
+                    if let areaElement = element.children[0] as? TFHppleElement {
+                        contact.address = areaElement.content
+                    }
+                }
+                //Second element Address...
+                if element.children.count > 2 {
+                    if let addressElement = element.children[2] as? TFHppleElement {
+                        contact.address = contact.address! + addressElement.content
+                    }
+                }
+                //Fifth element phoneNumber
+                if element.children.count > 5 {
+                    if let phoneNumberElement = element.children[5] as? TFHppleElement {
+                        contact.phoneNumber = phoneNumberElement.attributes!["href"] as? String
+                    }
+                }
+                //Fifth element emailId
+                if element.children.count > 8 {
+                    if let emailIdElement = element.children[8] as? TFHppleElement {
+                        contact.emailId = emailIdElement.attributes!["href"] as? String
+                    }
+                }
+            }
+        }
+        contact.mapURL = mapURLString
+        let llArray = mapURLString.componentsSeparatedByString("&")
+        if llArray.count > 1 {
+            let latLongCombined = llArray[1].componentsSeparatedByString("=")
+            if latLongCombined.count > 1 {
+                let latLongSeperated = latLongCombined[1].componentsSeparatedByString(",")
+                if latLongSeperated.count > 0 && latLongSeperated[0].characters.count > 0 {
+                    contact.latitude = NSNumber(double: Double(latLongSeperated[0])!)
+                }
+                if latLongSeperated.count > 1 && latLongSeperated[1].characters.count > 1 {
+                    contact.latitude = NSNumber(double: Double(latLongSeperated[1])!)
+                }
+            }
+        }
+    }
+
     func checkIfObjectExistInDatabase(entityName:String, predicate: NSPredicate) -> Bool {
         var objectExist:Bool = false
         let fetchRequest = NSFetchRequest(entityName: entityName)

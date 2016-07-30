@@ -8,4 +8,5 @@ target 'News' do
     pod 'iOS-GTLYouTube'
     pod 'MBProgressHUD'
     pod 'XCDYouTubeKit'
+    pod 'hpple'
 end
