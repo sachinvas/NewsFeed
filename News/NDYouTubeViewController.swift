@@ -16,7 +16,7 @@ import AVFoundation
 import XCDYouTubeKit
 
 let youTubeKeyChain = "YouTubeKeyChain"
-let youTubeClientId = "1048490923287-9dh44tgkdoskp5t001ppqqp7ac92prfp.apps.googleusercontent.com"
+let youTubeClientId = ""
 let youTubeScopes = [
                      "https://www.googleapis.com/auth/youtube",
                      "https://www.googleapis.com/auth/youtube.readonly",
@@ -140,7 +140,7 @@ class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSign
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let youTubeVideo = self.fetchedResultsController.fetchedObjects![indexPath.row] as! YouTubeVideo
-        dispatch_async(dispatch_get_main_queue()) {
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0)) {[weak self] in
             XCDYouTubeClient.defaultClient().getVideoWithIdentifier(youTubeVideo.videoId!) { (video:XCDYouTubeVideo?, error:NSError?) in
                 dispatch_async(dispatch_get_main_queue(), {
                     if error == nil {
@@ -153,7 +153,7 @@ class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSign
                                 }
                             }
                             playerController.player = AVPlayer(URL: url!)
-                            self.navigationController?.presentViewController(playerController, animated: true, completion: nil)
+                            self?.navigationController?.presentViewController(playerController, animated: true, completion: nil)
                         } else {
                             print("no Video found")
                         }
