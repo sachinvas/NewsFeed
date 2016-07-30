@@ -35,6 +35,7 @@ PODS:
     - Fabric
   - TwitterKit (2.3.0):
     - TwitterCore (= 2.3.0)
+  - XCDYouTubeKit (2.5.3)
 
 DEPENDENCIES:
   - Alamofire (~> 3.4)
@@ -42,6 +43,7 @@ DEPENDENCIES:
   - iOS-GTLYouTube
   - MBProgressHUD
   - TwitterKit
+  - XCDYouTubeKit
 
 SPEC CHECKSUMS:
   Alamofire: 01a82e2f6c0f860ade35534c8dd88be61bdef40c
@@ -60,7 +62,8 @@ SPEC CHECKSUMS:
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
   TwitterCore: 817eae3e291fa4125b47789e26a4f6f024115c1f
   TwitterKit: 8a383da8d9c21b0423716381ea8bbfce20622d91
+  XCDYouTubeKit: 90690f9e3523735dc93b8024269d991b0cfffe78
 
-PODFILE CHECKSUM: 140598033bc424c8abec926d6ca273e120a749c8
+PODFILE CHECKSUM: ababee51ea59e463ffa40b38b9f0e43ef5043ac9
 
 COCOAPODS: 1.0.1

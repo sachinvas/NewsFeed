@@ -7,4 +7,5 @@ target 'News' do
     pod 'Google/SignIn'
     pod 'iOS-GTLYouTube'
     pod 'MBProgressHUD'
+    pod 'XCDYouTubeKit'
 end

@@ -11,9 +11,12 @@ import GoogleSignIn
 import iOS_GTLYouTube
 import MBProgressHUD
 import CoreData
+import AVKit
+import AVFoundation
+import XCDYouTubeKit
 
 let youTubeKeyChain = "YouTubeKeyChain"
-let youTubeClientId = ""
+let youTubeClientId = "1048490923287-9dh44tgkdoskp5t001ppqqp7ac92prfp.apps.googleusercontent.com"
 let youTubeScopes = [
                      "https://www.googleapis.com/auth/youtube",
                      "https://www.googleapis.com/auth/youtube.readonly",
@@ -131,6 +134,34 @@ class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSign
         if let youTubeVideoCell = cell as? NDTableViewCell {
             let youTubeVideo = self.fetchedResultsController.fetchedObjects![indexPath.row] as! YouTubeVideo
             youTubeVideoCell.populateCellData(youTubeVideo.publishedAt!, titleText: youTubeVideo.title!, information: (text:youTubeVideo.videoDescription!, isHTML:false), avatarImagePath: youTubeVideo.thumbnailPath)
+        }
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        let youTubeVideo = self.fetchedResultsController.fetchedObjects![indexPath.row] as! YouTubeVideo
+        dispatch_async(dispatch_get_main_queue()) {
+            XCDYouTubeClient.defaultClient().getVideoWithIdentifier(youTubeVideo.videoId!) { (video:XCDYouTubeVideo?, error:NSError?) in
+                dispatch_async(dispatch_get_main_queue(), {
+                    if error == nil {
+                        if let xcYouTubeVideo = video {
+                            let playerController = AVPlayerViewController()
+                            var url: NSURL? = nil
+                            for preferedQuality in [XCDYouTubeVideoQuality.Small240, XCDYouTubeVideoQuality.Medium360] {
+                                if (xcYouTubeVideo.streamURLs[preferedQuality.rawValue as NSObject] != nil) {
+                                    url = xcYouTubeVideo.streamURLs[preferedQuality.rawValue as NSObject]!
+                                }
+                            }
+                            playerController.player = AVPlayer(URL: url!)
+                            self.navigationController?.presentViewController(playerController, animated: true, completion: nil)
+                        } else {
+                            print("no Video found")
+                        }
+                    } else {
+                        print(error)
+                    }
+                })
+            }
         }
     }
 }

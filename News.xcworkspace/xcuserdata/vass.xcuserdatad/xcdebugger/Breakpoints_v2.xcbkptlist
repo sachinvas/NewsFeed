@@ -9,13 +9,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "News/NDAppDelegate.swift"
-            timestampString = "491511443.466253"
+            filePath = "Pods/iOS-GTLYouTube/OAuth2/GTMOAuth2SignIn.m"
+            timestampString = "491557371.97987"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "26"
-            endingLineNumber = "26"
-            landmarkName = "application(_:didFinishLaunchingWithOptions:)"
+            startingLineNumber = "771"
+            endingLineNumber = "771"
+            landmarkName = "+revokeTokenForGoogleAuthentication:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pods/iOS-GTLYouTube/OAuth2/GTMOAuth2Authentication.m"
+            timestampString = "491557375.099646"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "764"
+            endingLineNumber = "764"
+            landmarkName = "-beginTokenFetchWithDelegate:didFinishSelector:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

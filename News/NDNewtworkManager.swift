@@ -7,12 +7,13 @@
 //
 
 import Foundation
+import CoreFoundation
 import Alamofire
 import TwitterKit
 import GoogleSignIn
 import iOS_GTLYouTube
 
-let googleAPIKey = ""
+let googleAPIKey = "AIzaSyA-X_X4yS9ZMNUGjU_yo2EgYgqyJm4ZWqc"
 
 class NDNetworkManager: NSObject {
     
@@ -130,8 +131,8 @@ class NDNetworkManager: NSObject {
             }
         }
     }
-    
-    func getYouTubeVideosForPlaylistItemId(playlistItemId:String, pageToken:String?, completionBlock:(Bool, String?)->()) {
+        
+    private func getYouTubeVideosForPlaylistItemId(playlistItemId:String, pageToken:String?, completionBlock:(Bool, String?)->()) {
         dispatch_async(dispatch_get_main_queue()) {[unowned self] in
             var playlistItemURLString = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&playlistId=\(playlistItemId)&"
             playlistItemURLString = playlistItemURLString + (pageToken != nil ? "pageToken=\(pageToken!)&key=\(googleAPIKey)" : "key=\(googleAPIKey)")

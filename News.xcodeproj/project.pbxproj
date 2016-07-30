@@ -40,6 +40,7 @@
 		5457517D1D3D035200DCF3E7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5457517C1D3D035200DCF3E7 /* LaunchScreen.storyboard */; };
 		546A57511D3A0DA8003677B2 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 546A57501D3A0DA8003677B2 /* MapKit.framework */; };
 		547CCC461D4A05F700CB738D /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 547CCC451D4A05F700CB738D /* GTMOAuth2ViewTouch.xib */; };
+		5485A8BE1D4C9856002554FA /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5485A8BD1D4C9856002554FA /* CoreFoundation.framework */; };
 		57741DF8DB3039E426D7ACEA /* Pods_News.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01D996AA6C569E925FD0D2A /* Pods_News.framework */; };
 /* End PBXBuildFile section */
 
@@ -91,6 +92,7 @@
 		5457517C1D3D035200DCF3E7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = News/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		546A57501D3A0DA8003677B2 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		547CCC451D4A05F700CB738D /* GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GTMOAuth2ViewTouch.xib; path = News/GTMOAuth2ViewTouch.xib; sourceTree = "<group>"; };
+		5485A8BD1D4C9856002554FA /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		8A1ACA1799EF7D2C74D11281 /* Pods-News.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-News.debug.xcconfig"; path = "Pods/Target Support Files/Pods-News/Pods-News.debug.xcconfig"; sourceTree = "<group>"; };
 		A5EF6616725EA89FDCF2D36B /* Pods-News.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-News.release.xcconfig"; path = "Pods/Target Support Files/Pods-News/Pods-News.release.xcconfig"; sourceTree = "<group>"; };
 		D01D996AA6C569E925FD0D2A /* Pods_News.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_News.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,6 +103,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5485A8BE1D4C9856002554FA /* CoreFoundation.framework in Frameworks */,
 				543BD4BF1D3B31A700075A3D /* CoreLocation.framework in Frameworks */,
 				546A57511D3A0DA8003677B2 /* MapKit.framework in Frameworks */,
 				57741DF8DB3039E426D7ACEA /* Pods_News.framework in Frameworks */,
@@ -238,6 +241,7 @@
 		5E8711CBA7C6775561F50045 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5485A8BD1D4C9856002554FA /* CoreFoundation.framework */,
 				D01D996AA6C569E925FD0D2A /* Pods_News.framework */,
 			);
 			name = Frameworks;

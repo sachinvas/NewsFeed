@@ -11,8 +11,8 @@ import Fabric
 import TwitterKit
 import GoogleSignIn
 
-let twitterConsumerKey = ""
-let twitterConsumerSecret = ""
+let twitterConsumerKey = "uyBkpqDnjRIoQMrwGOG3ZaDhL"
+let twitterConsumerSecret = "5HpHDhBppjVleRsEGZvW7oZumdfPAXqtOdtnMOogLfMNYteEZ9"
 
 @UIApplicationMain
 class NDAppDelegate: UIResponder, UIApplicationDelegate {

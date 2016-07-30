@@ -28,4 +28,23 @@ class NDUtility: NSObject {
         dateFormatter.dateFormat = "dd/MM/yyyy hh:mm"
         return dateFormatter
     }()
+    
+    func dictionaryFromResponse(response: String) -> Dictionary<String, String> {
+        var dictionary = Dictionary<String, String>()
+        let fields = response.componentsSeparatedByString("&");
+        
+        for field in fields {
+            let pair = field.componentsSeparatedByString("=")
+            if pair.count == 2 {
+                let key = pair[0]
+                var value = pair[1].stringByRemovingPercentEncoding
+                value = value?.stringByReplacingOccurrencesOfString("+", withString: " ")
+                if dictionary[key] != nil {
+                    print("duplicate key")
+                }
+                dictionary[key] = value
+            }
+        }
+        return dictionary
+    }
 }
