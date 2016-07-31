@@ -16,7 +16,7 @@ import AVFoundation
 import XCDYouTubeKit
 
 let youTubeKeyChain = "YouTubeKeyChain"
-let youTubeClientId = "1048490923287-9dh44tgkdoskp5t001ppqqp7ac92prfp.apps.googleusercontent.com"
+let youTubeClientId = ""
 let youTubeScopes = [
                      "https://www.googleapis.com/auth/youtube",
                      "https://www.googleapis.com/auth/youtube.readonly",

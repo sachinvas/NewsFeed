@@ -14,7 +14,7 @@ import GoogleSignIn
 import iOS_GTLYouTube
 import hpple
 
-let googleAPIKey = "AIzaSyA-X_X4yS9ZMNUGjU_yo2EgYgqyJm4ZWqc"
+let googleAPIKey = ""
 
 class NDNetworkManager: NSObject {
     
