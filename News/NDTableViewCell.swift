@@ -47,7 +47,7 @@ class NDTableViewCell: UITableViewCell {
                 })
                 })
         } else {
-            dateLabelLeadingConstraint.constant = 0.0
+            dateLabelLeadingConstraint.constant = 5.0
             avatarImageView.hidden = true
         }
     }

@@ -84,15 +84,21 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "$BUILT_PRODUCTS_DIR/AFNetworking/AFNetworking.framework"
   install_framework "$BUILT_PRODUCTS_DIR/Alamofire/Alamofire.framework"
   install_framework "$BUILT_PRODUCTS_DIR/MBProgressHUD/MBProgressHUD.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/PinterestSDK/PinterestSDK.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/SSKeychain/SSKeychain.framework"
   install_framework "$BUILT_PRODUCTS_DIR/XCDYouTubeKit/XCDYouTubeKit.framework"
   install_framework "$BUILT_PRODUCTS_DIR/hpple/hpple.framework"
   install_framework "$BUILT_PRODUCTS_DIR/iOS-GTLYouTube/iOS_GTLYouTube.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "$BUILT_PRODUCTS_DIR/AFNetworking/AFNetworking.framework"
   install_framework "$BUILT_PRODUCTS_DIR/Alamofire/Alamofire.framework"
   install_framework "$BUILT_PRODUCTS_DIR/MBProgressHUD/MBProgressHUD.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/PinterestSDK/PinterestSDK.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/SSKeychain/SSKeychain.framework"
   install_framework "$BUILT_PRODUCTS_DIR/XCDYouTubeKit/XCDYouTubeKit.framework"
   install_framework "$BUILT_PRODUCTS_DIR/hpple/hpple.framework"
   install_framework "$BUILT_PRODUCTS_DIR/iOS-GTLYouTube/iOS_GTLYouTube.framework"

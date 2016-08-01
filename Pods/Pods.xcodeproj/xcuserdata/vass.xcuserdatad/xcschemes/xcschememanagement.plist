@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>AFNetworking.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Alamofire.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -14,7 +19,17 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>PinterestSDK.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-News.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>SSKeychain.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -37,17 +52,32 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0776D389500DD720C23C5DAA34EEF869</key>
+		<key>1C3436CEA5C3D39764C5F54374794ECB</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>0A4CE8F6E9820EC87B2A3B8B9770F62B</key>
+		<key>393E4C2D021FBD7EB5935AA617EFE834</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>5A43FAD7E985FF723794AD1C5753BDFD</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A3C9E41E63EA5A7E2CF43B0CA85B51C1</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CFF08BD505AD8D774ECCCCE3E2713711</key>
 		<dict>
 			<key>primary</key>
 			<true/>

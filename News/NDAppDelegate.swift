@@ -10,9 +10,11 @@ import UIKit
 import Fabric
 import TwitterKit
 import GoogleSignIn
+import PinterestSDK
 
 let twitterConsumerKey = ""
 let twitterConsumerSecret = ""
+let pinterestAppId = ""
 
 @UIApplicationMain
 class NDAppDelegate: UIResponder, UIApplicationDelegate {
@@ -24,6 +26,7 @@ class NDAppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         Twitter.sharedInstance().startWithConsumerKey(twitterConsumerKey, consumerSecret: twitterConsumerSecret)
         Fabric.with([Twitter.self])
+        PDKClient.configureSharedInstanceWithAppId(pinterestAppId)
         return true
     }
 
@@ -51,6 +54,17 @@ class NDAppDelegate: UIResponder, UIApplicationDelegate {
 //        self.saveContext()
     }
     
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        if Twitter.sharedInstance().application(application, openURL: url, options: annotation as! [NSObject : AnyObject]) {
+            return true
+        } else if GIDSignIn.sharedInstance().handleURL(url, sourceApplication: sourceApplication, annotation: annotation) {
+            return true
+        } else if PDKClient.sharedInstance().handleCallbackURL(url) {
+            return true
+        }
+        return false
+    }
+    
     func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
         var sourceApp = "com.datalicious.news"
         if #available(iOS 9.0, *) {
@@ -59,6 +73,8 @@ class NDAppDelegate: UIResponder, UIApplicationDelegate {
         if Twitter.sharedInstance().application(app, openURL: url, options: options) {
             return true
         } else if GIDSignIn.sharedInstance().handleURL(url, sourceApplication: sourceApp, annotation: options) {
+            return true
+        } else if PDKClient.sharedInstance().handleCallbackURL(url) {
             return true
         }
         return false

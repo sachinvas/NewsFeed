@@ -9,4 +9,5 @@ target 'News' do
     pod 'MBProgressHUD'
     pod 'XCDYouTubeKit'
     pod 'hpple'
+    pod 'PinterestSDK', :git => 'https://github.com/pinterest/ios-pdk.git'
 end

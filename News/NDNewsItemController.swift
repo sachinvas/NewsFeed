@@ -117,7 +117,7 @@ class NDNewsItemController: NSObject {
                     contact.latitude = NSNumber(double: Double(latLongSeperated[0])!)
                 }
                 if latLongSeperated.count > 1 && latLongSeperated[1].characters.count > 1 {
-                    contact.latitude = NSNumber(double: Double(latLongSeperated[1])!)
+                    contact.longitude = NSNumber(double: Double(latLongSeperated[1])!)
                 }
             }
         }

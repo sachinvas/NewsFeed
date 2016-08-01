@@ -2,12 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>twitterkit-uyBkpqDnjRIoQMrwGOG3ZaDhL</string>
-		<string>com.googleusercontent.apps.1048490923287-9dh44tgkdoskp5t001ppqqp7ac92prfp</string>
-		<string>com.datalicious.news</string>
-	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
@@ -50,6 +44,14 @@
 				<string>com.googleusercontent.apps.1048490923287-9dh44tgkdoskp5t001ppqqp7ac92prfp</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>pdk4848557171236940398</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
@@ -72,6 +74,12 @@
 			</dict>
 		</array>
 	</dict>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>twitterkit-uyBkpqDnjRIoQMrwGOG3ZaDhL</string>
+		<string>com.googleusercontent.apps.1048490923287-9dh44tgkdoskp5t001ppqqp7ac92prfp</string>
+		<string>com.datalicious.news</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

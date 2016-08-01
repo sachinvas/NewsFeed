@@ -27,6 +27,8 @@ class NDContactViewController: UITableViewController, CLLocationManagerDelegate,
         super.viewDidLoad()
         locationManager = CLLocationManager()
         locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        locationManager.distanceFilter = 10.0
         if CLLocationManager.authorizationStatus() == .NotDetermined {
             locationManager.requestWhenInUseAuthorization()
         }
@@ -55,6 +57,9 @@ class NDContactViewController: UITableViewController, CLLocationManagerDelegate,
             let fetchedObjects = try NDCoreDataManager.sharedManager.mainQueueMOC.executeFetchRequest(fetchRequest)
             if let fetchedObjects = fetchedObjects as? Array<Contact> {
                 for contact in fetchedObjects {
+                    if contact.latitude?.intValue == 0 && contact.latitude?.intValue == 0 {
+                        continue
+                    }
                     let location = CLLocation(latitude: contact.latitude!.doubleValue, longitude: contact.longitude!.doubleValue)
                     let distance = mapView.userLocation.location?.distanceFromLocation(location)
                     if smallestDistance == nil || distance < smallestDistance {
@@ -84,6 +89,7 @@ class NDContactViewController: UITableViewController, CLLocationManagerDelegate,
     
     func purgeMapView() {
         autoreleasepool {
+            locationManager.stopUpdatingLocation()
             locationManager.delegate = nil
             tableView.tableHeaderView = nil
             mapView.showsUserLocation = false
@@ -97,16 +103,19 @@ class NDContactViewController: UITableViewController, CLLocationManagerDelegate,
         mapView = MKMapView()
         mapView.frame = mapViewRect
         mapView.mapType = .Standard
+        mapView.zoomEnabled = true
+        mapView.scrollEnabled = true
         mapView.delegate = self
         mapView.showsUserLocation = true
         locationManager.delegate = self
+        locationManager.startUpdatingLocation()
     }
     
     var navigationBarHeight:CGFloat {
         get {
             var height:CGFloat = 0.0
             if let rootViewController = UIApplication.sharedApplication().keyWindow?.rootViewController as? UINavigationController {
-                height = rootViewController.navigationBar.frame.size.height;
+                height = rootViewController.navigationBar.frame.size.height
             }
             return height
         }
@@ -124,11 +133,16 @@ class NDContactViewController: UITableViewController, CLLocationManagerDelegate,
     }
     
     func locationManager(manager: CLLocationManager, didUpdateToLocation newLocation: CLLocation, fromLocation oldLocation: CLLocation) {
-        mapView.centerCoordinate = newLocation.coordinate
+        let region = MKCoordinateRegionMakeWithDistance(newLocation.coordinate, 600, 600)
+        mapView.setRegion(region, animated: true)
+    }
+    
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        print(error)
     }
     
     func mapView(mapView: MKMapView, didUpdateUserLocation userLocation: MKUserLocation) {
-        let region = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 200, 200)
+        let region = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 600, 600)
         mapView.setRegion(region, animated: true)
         
         if pointAnnotation == nil {
