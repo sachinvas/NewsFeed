@@ -1,5 +1,19 @@
 PODS:
-  - Alamofire (3.4.1)
+  - AFNetworking (3.1.0):
+    - AFNetworking/NSURLSession (= 3.1.0)
+    - AFNetworking/Reachability (= 3.1.0)
+    - AFNetworking/Security (= 3.1.0)
+    - AFNetworking/Serialization (= 3.1.0)
+    - AFNetworking/UIKit (= 3.1.0)
+  - AFNetworking/NSURLSession (3.1.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.1.0)
+  - AFNetworking/Security (3.1.0)
+  - AFNetworking/Serialization (3.1.0)
+  - AFNetworking/UIKit (3.1.0):
+    - AFNetworking/NSURLSession
   - Fabric (1.6.7)
   - FirebaseAnalytics (3.2.1):
     - FirebaseInstanceID (~> 1.0)
@@ -32,6 +46,10 @@ PODS:
   - hpple (0.2.0)
   - iOS-GTLYouTube (0.0.4)
   - MBProgressHUD (1.0.0)
+  - PinterestSDK (1.0.2):
+    - AFNetworking (~> 3.0)
+    - SSKeychain
+  - SSKeychain (1.4.0)
   - TwitterCore (2.3.0):
     - Fabric
   - TwitterKit (2.3.0):
@@ -39,16 +57,25 @@ PODS:
   - XCDYouTubeKit (2.5.3)
 
 DEPENDENCIES:
-  - Alamofire (~> 3.4)
   - Google/SignIn
   - hpple
   - iOS-GTLYouTube
   - MBProgressHUD
+  - PinterestSDK (from `https://github.com/pinterest/ios-pdk.git`)
   - TwitterKit
   - XCDYouTubeKit
 
+EXTERNAL SOURCES:
+  PinterestSDK:
+    :git: https://github.com/pinterest/ios-pdk.git
+
+CHECKOUT OPTIONS:
+  PinterestSDK:
+    :commit: cd22d1efe2ab66c9545cd8a1cec64dc9275e7951
+    :git: https://github.com/pinterest/ios-pdk.git
+
 SPEC CHECKSUMS:
-  Alamofire: 01a82e2f6c0f860ade35534c8dd88be61bdef40c
+  AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   Fabric: caf7580c725e64db144f610ac65cd60956911dc7
   FirebaseAnalytics: 0fd6532cb2c3d03cd5cf26ad295ccb091efd3104
   FirebaseInstanceID: a9d923f3d0b6fbf9fac89310860357aaadc34be5
@@ -63,10 +90,12 @@ SPEC CHECKSUMS:
   hpple: 3b765f96fc2cd56ad1a49aef6f7be5cb2aa64b57
   iOS-GTLYouTube: a2d3c7acaf9249c51eec9b6ff418954a19f2fc16
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
+  PinterestSDK: f79f74a6b04f77e0c6d42debaa6349f7d2b394eb
+  SSKeychain: c71293fa57216a40ab06c23f4085387583293de4
   TwitterCore: 817eae3e291fa4125b47789e26a4f6f024115c1f
   TwitterKit: 8a383da8d9c21b0423716381ea8bbfce20622d91
   XCDYouTubeKit: 90690f9e3523735dc93b8024269d991b0cfffe78
 
-PODFILE CHECKSUM: 1990e570f2f4014ce37d41c30412d986e6d48c25
+PODFILE CHECKSUM: 39ddbe9398b7da46f85ac9bcb6ff45c34339068b
 
 COCOAPODS: 1.0.1

@@ -38,6 +38,13 @@ class NDTwitterViewController: UITableViewController {
                             self?.session = trtwSession
                             self?.fetchTweets()
                         }
+                    } else if let error = error {
+                        let alertController = UIAlertController(title: "Error Occurred", message: error.localizedDescription, preferredStyle: .Alert)
+                        let action = UIAlertAction(title: "Ok", style: .Cancel, handler: { (action:UIAlertAction) in
+                            alertController.dismissViewControllerAnimated(true, completion: nil)
+                        })
+                        alertController.addAction(action)
+                        self?.navigationController?.presentViewController(alertController, animated: true, completion: nil)
                     }
                 })
             }
@@ -55,17 +62,26 @@ class NDTwitterViewController: UITableViewController {
     
     func fetchTweets() {
         activityView.detailsLabel.text = "Fetching Tweets..."
-        NDNetworkManager.sharedManager.fetchTweets {[weak self] (success: Bool, filePath: String?) in
-            dispatch_async(dispatch_get_main_queue(), {
-                self?.activityView.hidden = true
-                self?.activityView.hideAnimated(true)
-                if success {
-                    if let tweetArray = NSKeyedUnarchiver.unarchiveObjectWithFile(filePath!) as? Array<TWTRTweet> {
-                        self?.tweets = tweetArray
-                        self?.tableView.reloadData()
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
+            NDNetworkManager.sharedManager.fetchTweets {[weak self] (success: Bool, filePath: String?, error: NSError?) in
+                dispatch_async(dispatch_get_main_queue(), {
+                    self?.activityView.hidden = true
+                    self?.activityView.hideAnimated(true)
+                    if success && filePath != nil {
+                        if let tweetArray = NSKeyedUnarchiver.unarchiveObjectWithFile(filePath!) as? Array<TWTRTweet> {
+                            self?.tweets = tweetArray
+                            self?.tableView.reloadData()
+                        }
+                    } else if let error = error {
+                        let alertController = UIAlertController(title: "Error Occurred", message: error.localizedDescription, preferredStyle: .Alert)
+                        let action = UIAlertAction(title: "Ok", style: .Cancel, handler: { (action:UIAlertAction) in
+                            alertController.dismissViewControllerAnimated(true, completion: nil)
+                        })
+                        alertController.addAction(action)
+                        self?.navigationController?.presentViewController(alertController, animated: true, completion: nil)
                     }
-                }
-            })
+                })
+            }
         }
     }
     
@@ -83,7 +99,7 @@ class NDTwitterViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let tweet = self.tweets[indexPath.row]
-        return TWTRTweetTableViewCell.heightForTweet(tweet, style: .Regular, width: tableView.frame.size.height, showingActions: false) - 180
+        return TWTRTweetTableViewCell.heightForTweet(tweet, style: .Regular, width: tableView.frame.size.height, showingActions: false)
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

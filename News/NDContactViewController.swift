@@ -33,8 +33,23 @@ class NDContactViewController: UITableViewController, CLLocationManagerDelegate,
             locationManager.requestWhenInUseAuthorization()
         }
         
-        NDNetworkManager.sharedManager.getContactDetailsFromDatalicicous {[weak self] (success:Bool) in
+        NDNetworkManager.sharedManager.getContactDetailsFromDatalicicous {[weak self] (success:Bool, error:NSError?) in
             dispatch_async(dispatch_get_main_queue(), {
+                if success {
+                if self?.nearByContact == nil && CLLocationManager.authorizationStatus() == .AuthorizedWhenInUse {
+                    self?.nearByContact = self?.contactNearToUserLocation()
+                    if self?.nearByContact != nil {
+                        self?.updateTableView()
+                    }
+                }
+                } else if let error = error {
+                    let alertController = UIAlertController(title: "Error Occurred", message: error.localizedDescription, preferredStyle: .Alert)
+                    let action = UIAlertAction(title: "Ok", style: .Cancel, handler: { (action:UIAlertAction) in
+                        alertController.dismissViewControllerAnimated(true, completion: nil)
+                    })
+                    alertController.addAction(action)
+                    self?.navigationController?.presentViewController(alertController, animated: true, completion: nil)
+                }
             })
         }
     }
@@ -138,7 +153,13 @@ class NDContactViewController: UITableViewController, CLLocationManagerDelegate,
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        print(error)
+        let alertController = UIAlertController(title: "Location Services Not Enabled", message: "Please Check your Setting to enable the location services", preferredStyle: .Alert)
+        let alertAction = UIAlertAction(title: "Ok", style: .Cancel) {[weak self] (action:UIAlertAction) in
+            self?.mapView.hidden = true
+            alertController.dismissViewControllerAnimated(true, completion: nil)
+        }
+        alertController.addAction(alertAction)
+        navigationController?.presentViewController(alertController, animated: true, completion: nil)
     }
     
     func mapView(mapView: MKMapView, didUpdateUserLocation userLocation: MKUserLocation) {
@@ -150,7 +171,9 @@ class NDContactViewController: UITableViewController, CLLocationManagerDelegate,
             mapView.addAnnotation(pointAnnotation!)
             if nearByContact == nil {
                 nearByContact = contactNearToUserLocation()
-                updateTableView()
+                if nearByContact != nil {
+                    updateTableView()
+                }
             }
         }
         pointAnnotation!.coordinate = userLocation.coordinate
@@ -158,5 +181,32 @@ class NDContactViewController: UITableViewController, CLLocationManagerDelegate,
     
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return tableView.frame.size.height - 5*rowHeight
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        if indexPath.row == 0 {
+            let coordinate = mapView.userLocation.coordinate
+            let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary:nil))
+            mapItem.name = "Target location"
+            mapItem.openInMapsWithLaunchOptions([MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving])
+        } else if indexPath.row == 1 {
+            let url = NSURL(string: websiteLabel.text!)
+            self.openURL(url!)
+        } else if indexPath.row == 2 {
+            let urlString = "mailto:" + emailId.text!
+            let url = NSURL(string: urlString)
+            self.openURL(url!)
+        } else if indexPath.row == 3 {
+            let urlString = "tel:" + phoneNumberLabel.text!
+            let url = NSURL(string: urlString)
+            self.openURL(url!)
+        }
+    }
+    
+    func openURL(url: NSURL) {
+        if UIApplication.sharedApplication().canOpenURL(url) {
+            UIApplication.sharedApplication().openURL(url)
+        }
     }
 }

@@ -8,13 +8,13 @@
 
 import Foundation
 import CoreFoundation
-import Alamofire
+import AFNetworking
 import TwitterKit
 import GoogleSignIn
 import iOS_GTLYouTube
 import hpple
 
-let googleAPIKey = ""
+let googleAPIKey = "AIzaSyA-X_X4yS9ZMNUGjU_yo2EgYgqyJm4ZWqc"
 
 class NDNetworkManager: NSObject {
     
@@ -36,8 +36,8 @@ class NDNetworkManager: NSObject {
     }
     
     // MARK: blogs from datalicious...
-    func fetchDataLiciousBlogFeeds(completionBlock: (Bool)->()) {
-        performAPICall("http://blog.datalicious.com/feed/", method: nil, parameters: [:], headers: [:]) { (success: Bool, data: NSData?) in
+    func fetchDataLiciousBlogFeeds(completionBlock: (Bool, NSError?)->()) {
+        performAPICall("http://blog.datalicious.com/feed/", method: nil, parameters: [:]) { (success: Bool, data: NSData?, error: NSError?) in
             if success {
                 let blogItemParser = NDBlogItemParser(xmlData: data!)
                 blogItemParser.parse()
@@ -51,54 +51,105 @@ class NDNetworkManager: NSObject {
                 }
                 newsItemController.saveMoc()
             }
-            completionBlock(success)
+            completionBlock(success, error)
         }
     }
     
     // MARK: tweets from user account...
-    func fetchTweets(completionBlock: (Bool, String?)->()) {
-        searchTweets(["q":"from@datalicious"], completionBlock: { (success, tweets) in
-            if let tweeetArray = tweets {
-                var filePath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
-                filePath = filePath + "/Tweets"
-                let success = NSKeyedArchiver.archiveRootObject(tweeetArray, toFile: filePath)
-                completionBlock(success, (success ? filePath : nil))
-            } else {
-                completionBlock(success, nil)
+    func fetchTweets(completionBlock: (Bool, String?, NSError?)->()) {
+        var count = 0
+        count = count + 1
+        var overAllTweets: [TWTRTweet] = []
+        var overAllError: NSError?
+        var overAllSuccess: Bool = false
+        searchTweets(["q":"from:datalicious"], completionBlock: { (success, tweets, error) in
+            overAllSuccess = success
+            overAllError = error
+            if let tweets = tweets {
+                if overAllTweets.count == 0 {
+                    overAllTweets = tweets
+                } else {
+                    overAllTweets = overAllTweets + tweets
+                }
             }
+            count = count - 1
         })
+        while count != 0 {
+        }
+        count = count + 1
+        searchTweets(["q":"from:cbartens"], completionBlock: { (success, tweets, error) in
+            overAllSuccess = success
+            overAllError = error
+            if let tweets = tweets {
+                if overAllTweets.count == 0 {
+                    overAllTweets = tweets
+                } else {
+                    overAllTweets = overAllTweets + tweets
+                }
+            }
+            count = count - 1
+        })
+        while count != 0 {
+        }
+        count = count + 1
+        searchTweets(["q":"from:thesupertag"], completionBlock: { (success, tweets, error) in
+            overAllSuccess = success
+            overAllError = error
+            if let tweets = tweets {
+                if overAllTweets.count == 0 {
+                    overAllTweets = tweets
+                } else {
+                    overAllTweets = overAllTweets + tweets
+                }
+            }
+            count = count - 1
+        })
+        while count != 0 {
+        }
+        if overAllTweets.count > 0 {
+            var filePath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+            filePath = filePath + "/Tweets"
+            let success = NSKeyedArchiver.archiveRootObject(overAllTweets, toFile: filePath)
+            completionBlock(success, (overAllSuccess ? filePath : nil), overAllError)
+        } else {
+            completionBlock(overAllSuccess, nil, overAllError)
+        }
     }
 
-    func searchTweets(params: [NSObject:AnyObject], completionBlock: (Bool, [TWTRTweet]?)->()) {
-        let client = TWTRAPIClient()
-        let statusesShowEndpoint = "https://api.twitter.com/1.1/search/tweets.json"
-        var clientError : NSError?
-        
-        let request = client.URLRequestWithMethod("GET", URL: statusesShowEndpoint, parameters: params, error: &clientError)
-        
-        client.sendTwitterRequest(request) { (response, data, connectionError) -> Void in
-            if connectionError != nil {
-                print("Error: \(connectionError)")
-                completionBlock(false, nil)
-            }
+    func searchTweets(params: [NSObject:AnyObject], completionBlock: (Bool, [TWTRTweet]?, NSError?)->()) {
+        dispatch_async(dispatch_get_main_queue()) {
+            let client = TWTRAPIClient()
+            let statusesShowEndpoint = "https://api.twitter.com/1.1/search/tweets.json"
+            var clientError : NSError?
             
-            if data != nil {
-                do {
-                    let json = try NSJSONSerialization.JSONObjectWithData(data!, options: [])
-                    if let jsonArray = json["statuses"] as? [AnyObject] where jsonArray.count > 0 {
-                        if let tweets = TWTRTweet.tweetsWithJSONArray(jsonArray) as? Array<TWTRTweet> {
-                            completionBlock(true, tweets)
+            let request = client.URLRequestWithMethod("GET", URL: statusesShowEndpoint, parameters: params, error: &clientError)
+            
+            client.sendTwitterRequest(request) { (response, data, connectionError) -> Void in
+                if connectionError != nil {
+                    print("Error: \(connectionError)")
+                    completionBlock(false, nil, connectionError)
+                }
+                
+                if data != nil {
+                    do {
+                        let json = try NSJSONSerialization.JSONObjectWithData(data!, options: [])
+                        if let jsonArray = json["statuses"] as? [AnyObject] where jsonArray.count > 0 {
+                            if let tweets = TWTRTweet.tweetsWithJSONArray(jsonArray) as? Array<TWTRTweet> {
+                                completionBlock(true, tweets, nil)
+                            } else {
+                                print("Unable to convert to tweets")
+                                let userInfo = ["NSLocalizedDescriptionKey": "Twitter response is improper"]
+                                let error = NSError(domain: "com.datalicious.news", code: 1, userInfo: userInfo)
+                                completionBlock(false, nil, error)
+                            }
                         } else {
-                            print("Unable to convert to tweets")
-                            completionBlock(false, nil)
+                            print("No tweets")
+                            completionBlock(true, nil, nil)
                         }
-                    } else {
-                        print("No tweets")
-                        completionBlock(false, nil)
+                    } catch let jsonError as NSError {
+                        print("json error: \(jsonError.localizedDescription)")
+                        completionBlock(false, nil, jsonError)
                     }
-                } catch let jsonError as NSError {
-                    print("json error: \(jsonError.localizedDescription)")
-                    completionBlock(false, nil)
                 }
             }
         }
@@ -106,14 +157,14 @@ class NDNetworkManager: NSObject {
     
     
     // MARK: YouTube videos
-    func getYouTubeDataliciousVideos(completionBlock:(Bool)->()) {
-        getYoutubeDataliciousUploadPlaylistId {[unowned self] (success:Bool, playlistid:String?) in
+    func getYouTubeDataliciousVideos(completionBlock:(Bool, NSError?)->()) {
+        getYoutubeDataliciousUploadPlaylistId {[unowned self] (success:Bool, playlistid:String?, error:NSError?) in
             if success {
                 if let id = playlistid {
                     var pageToken:String? = nil
                     while true {
                         var count:Int = 1
-                        self.getYouTubeVideosForPlaylistItemId(id, pageToken: pageToken, completionBlock: { (success:Bool, nextPageToken:String?) in
+                        self.getYouTubeVideosForPlaylistItemId(id, pageToken: pageToken, completionBlock: { (success:Bool, nextPageToken:String?, error: NSError?) in
                             if success {
                                 pageToken = nextPageToken
                             }
@@ -125,17 +176,20 @@ class NDNetworkManager: NSObject {
                             break
                         }
                     }
-                    completionBlock(true)
+                    completionBlock(true, nil)
                 } else {
-                    completionBlock(false)
+                    let userInfo = ["NSLocalizedDescriptionKey": "PlaylistId is valid"]
+                    let error = NSError(domain: "com.datalicious.news", code: 1002, userInfo: userInfo)
+                    completionBlock(false, error)
                 }
             } else {
-                completionBlock(false)
+                print(error)
+                completionBlock(false, error)
             }
         }
     }
         
-    private func getYouTubeVideosForPlaylistItemId(playlistItemId:String, pageToken:String?, completionBlock:(Bool, String?)->()) {
+    private func getYouTubeVideosForPlaylistItemId(playlistItemId:String, pageToken:String?, completionBlock:(Bool, String?, NSError?)->()) {
         dispatch_async(dispatch_get_main_queue()) {[unowned self] in
             var playlistItemURLString = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&playlistId=\(playlistItemId)&"
             playlistItemURLString = playlistItemURLString + (pageToken != nil ? "pageToken=\(pageToken!)&key=\(googleAPIKey)" : "key=\(googleAPIKey)")
@@ -154,31 +208,32 @@ class NDNetworkManager: NSObject {
                                     }
                                 }
                                 newsItemController.saveMoc()
-                                completionBlock(true, listResponse.nextPageToken)
+                                completionBlock(true, listResponse.nextPageToken, nil)
                             } else {
                                 print("No items found")
-                                completionBlock(false, nil)
+                                completionBlock(true, nil, nil)
                             }
                         } else {
-                            print("listResponse is not GTLYouTubeChannelListResponse \(object)")
-                            completionBlock(false, nil)
+                            let userInfo = ["NSLocalizedDescriptionKey": "Youtube response couldn't be parsed"]
+                            let error = NSError(domain: "com.datalicious.news", code: 1001, userInfo: userInfo)
+                            completionBlock(false, nil, error)
                         }
                     } else {
                         print(error)
-                        completionBlock(false, nil)
+                        completionBlock(false, nil, error)
                     }
                 })
             })
         }
     }
     
-    private func getYoutubeDataliciousUploadPlaylistId(completionBlock: (Bool, String?)->()) {
-        getAllRelatedPlayListsOfDataliciousFromYouTube {[unowned self] (success:Bool, relatedPlaylist:GTLYouTubeChannelContentDetailsRelatedPlaylists?) in
+    private func getYoutubeDataliciousUploadPlaylistId(completionBlock: (Bool, String?, NSError?)->()) {
+        getAllRelatedPlayListsOfDataliciousFromYouTube {[unowned self] (success:Bool, relatedPlaylist:GTLYouTubeChannelContentDetailsRelatedPlaylists?, error: NSError?) in
             if success {
                 var count:Int = 1
                 var uploadPlaylist: GTLYouTubePlaylist! = nil
                 self.newtworkQueue.addOperationWithBlock({
-                    self.getPlaylistItemForplaylistId(relatedPlaylist!.uploads, completionBlock: { (success:Bool, obtainedPlaylist:GTLYouTubePlaylist?) in
+                    self.getPlaylistItemForplaylistId(relatedPlaylist!.uploads, completionBlock: { (success:Bool, obtainedPlaylist:GTLYouTubePlaylist?, error: NSError?) in
                         if success {
                             if let playlist = obtainedPlaylist {
                                 uploadPlaylist = playlist
@@ -190,19 +245,23 @@ class NDNetworkManager: NSObject {
                 while count != 0 {
                 }
                 if let uploadPlaylistId = uploadPlaylist.identifier {
-                    completionBlock(true, uploadPlaylistId)
+                    completionBlock(true, uploadPlaylistId, nil)
                 } else {
-                    completionBlock(false, nil)
+                    let userInfo = ["NSLocalizedDescriptionKey": "PlaylistId is valid"]
+                    let error = NSError(domain: "com.datalicious.news", code: 1002, userInfo: userInfo)
+                    completionBlock(false, nil, error)
                 }
             } else {
-                completionBlock(false, nil)
+                completionBlock(false, nil, error)
             }
         }
     }
     
-    private func getPlaylistItemForplaylistId(playlistId:String?, completionBlock:(Bool, GTLYouTubePlaylist?)->()) {
+    private func getPlaylistItemForplaylistId(playlistId:String?, completionBlock:(Bool, GTLYouTubePlaylist?, NSError?)->()) {
         guard let playlistId = playlistId else {
-            completionBlock(false, nil)
+            let userInfo = ["NSLocalizedDescriptionKey": "PlaylistId is valid"]
+            let error = NSError(domain: "com.datalicious.news", code: 1002, userInfo: userInfo)
+            completionBlock(false, nil, error)
             return
         }
         let playlistURLString = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=\(playlistId)&key=\(googleAPIKey)"
@@ -215,34 +274,38 @@ class NDNetworkManager: NSObject {
                             if let items = listResponse.items() {
                                 if items.count > 0 {
                                     if let playlist = items[0] as? GTLYouTubePlaylist {
-                                        completionBlock(true, playlist)
+                                        completionBlock(true, playlist, nil)
                                     } else {
                                         print("Not YouTubeChannel \(items[0])")
-                                        completionBlock(false, nil)
+                                        let userInfo = ["NSLocalizedDescriptionKey": "Youtube response couldn't be parsed"]
+                                        let error = NSError(domain: "com.datalicious.news", code: 1001, userInfo: userInfo)
+                                        completionBlock(false, nil, error)
                                     }
                                 } else {
                                     print("YouTubeChannel count \(items.count)")
-                                    completionBlock(false, nil)
+                                    completionBlock(true, nil, nil)
                                 }
                             } else {
                                 print("No items found")
-                                completionBlock(false, nil)
+                                completionBlock(true, nil, nil)
                             }
                         } else {
                             print("listResponse is not GTLYouTubeChannelListResponse")
-                            completionBlock(false, nil)
+                            let userInfo = ["NSLocalizedDescriptionKey": "Youtube response couldn't be parsed"]
+                            let error = NSError(domain: "com.datalicious.news", code: 1001, userInfo: userInfo)
+                            completionBlock(false, nil, error)
                         }
                     } else {
                         print(error)
-                        completionBlock(false, nil)
+                        completionBlock(false, nil, error)
                     }
                 })
             }
         }
     }
     
-    private func getAllRelatedPlayListsOfDataliciousFromYouTube(completionBlock:(Bool, GTLYouTubeChannelContentDetailsRelatedPlaylists?)->()) {
-        getChannelIdOfDataliciousFromYouTube {[unowned self] (success:Bool, channelId:String?) in
+    private func getAllRelatedPlayListsOfDataliciousFromYouTube(completionBlock:(Bool, GTLYouTubeChannelContentDetailsRelatedPlaylists?, NSError?)->()) {
+        getChannelIdOfDataliciousFromYouTube {[unowned self] (success:Bool, channelId:String?, error:NSError?) in
             if success {
                 let channelId = channelId!
                 let channelURLString = "https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=\(channelId)&key=\(googleAPIKey)"
@@ -255,38 +318,42 @@ class NDNetworkManager: NSObject {
                                     if let items = listResponse.items() {
                                         if items.count > 0 {
                                             if let channel = items[0] as? GTLYouTubeChannel {
-                                                completionBlock(true, channel.contentDetails.relatedPlaylists)
+                                                completionBlock(true, channel.contentDetails.relatedPlaylists, nil)
                                             } else {
                                                 print("Not YouTubeChannel \(items[0])")
-                                                completionBlock(false, nil)
+                                                let userInfo = ["NSLocalizedDescriptionKey": "Youtube response couldn't be parsed"]
+                                                let error = NSError(domain: "com.datalicious.news", code: 1001, userInfo: userInfo)
+                                                completionBlock(false, nil, error)
                                             }
                                         } else {
                                             print("YouTubeChannel count \(items.count)")
-                                            completionBlock(false, nil)
+                                            completionBlock(true, nil, nil)
                                         }
                                     } else {
                                         print("No items found")
-                                        completionBlock(false, nil)
+                                        completionBlock(true, nil, nil)
                                     }
                                 } else {
                                     print("listResponse is not GTLYouTubeChannelListResponse")
-                                    completionBlock(false, nil)
+                                    let userInfo = ["NSLocalizedDescriptionKey": "Youtube response couldn't be parsed"]
+                                    let error = NSError(domain: "com.datalicious.news", code: 1001, userInfo: userInfo)
+                                    completionBlock(false, nil, error)
                                 }
                             } else {
                                 print(error)
-                                completionBlock(false, nil)
+                                completionBlock(false, nil, error)
                             }
                         })
                     })
                 })
             } else {
                 print("Unsuccessful")
-                completionBlock(false, nil)
+                completionBlock(false, nil, error)
             }
         }
     }
 
-    private func getChannelIdOfDataliciousFromYouTube(completionBlock:(Bool, String?)->()) {
+    private func getChannelIdOfDataliciousFromYouTube(completionBlock:(Bool, String?, NSError?)->()) {
         let urlString = "https://www.googleapis.com/youtube/v3/channels?part=id&forUsername=datalicious&key=\(googleAPIKey)"
         let url = NSURL(string: urlString)
         dispatch_async(dispatch_get_main_queue()) {[unowned self] in
@@ -297,26 +364,30 @@ class NDNetworkManager: NSObject {
                             if let items = listResponse.items() {
                                 if items.count > 0 {
                                     if let channel = items[0] as? GTLYouTubeChannel {
-                                        completionBlock(true, channel.identifier)
+                                        completionBlock(true, channel.identifier, nil)
                                     } else {
                                         print("Not YouTubeChannel \(items[0])")
-                                        completionBlock(false, nil)
+                                        let userInfo = ["NSLocalizedDescriptionKey": "Youtube response couldn't be parsed"]
+                                        let error = NSError(domain: "com.datalicious.news", code: 1001, userInfo: userInfo)
+                                        completionBlock(false, nil, error)
                                     }
                                 } else {
                                     print("YouTubeChannel count \(items.count)")
-                                    completionBlock(false, nil)
+                                    completionBlock(true, nil, nil)
                                 }
                             } else {
                                 print("No items found")
-                                completionBlock(false, nil)
+                                completionBlock(true, nil, nil)
                             }
                         } else {
                             print("listResponse is not GTLYouTubeChannelListResponse")
-                            completionBlock(false, nil)
+                            let userInfo = ["NSLocalizedDescriptionKey": "Youtube response couldn't be parsed"]
+                            let error = NSError(domain: "com.datalicious.news", code: 1001, userInfo: userInfo)
+                            completionBlock(false, nil, error)
                         }
                     } else {
                         print(error)
-                        completionBlock(false, nil)
+                        completionBlock(false, nil, error)
                     }
                 })
             }
@@ -325,8 +396,8 @@ class NDNetworkManager: NSObject {
     
     
     // MARK: Contacts...
-    func getContactDetailsFromDatalicicous(completionBlock: (Bool)->()) {
-        performAPICall("http://www.datalicious.com/contact/", method: nil, parameters: [:], headers: [:]) { (success:Bool, data:NSData?) in
+    func getContactDetailsFromDatalicicous(completionBlock: (Bool, NSError?)->()) {
+        performAPICall("http://www.datalicious.com/contact/", method: nil, parameters: [:]) { (success:Bool, data:NSData?, error:NSError?) in
             if success {
                 if let data = data {
                     let hppleParser = TFHpple(HTMLData: data)
@@ -353,24 +424,37 @@ class NDNetworkManager: NSObject {
                         }
                     }
                     newsController.saveMoc()
-                    completionBlock(true)
+                    completionBlock(true, nil)
                 } else {
-                    completionBlock(false)
+                    let userInfo = ["NSLocalizedDescriptionKey": "Data not found"]
+                    let error = NSError(domain: "com.datalicious.news", code: 1001, userInfo: userInfo)
+                    completionBlock(false, error)
                 }
             } else {
-                completionBlock(false)
+                completionBlock(false,error)
             }
         }
     }
     
-    func performAPICall(urlString: String, method: String?, parameters: [String: AnyObject], headers:[String: String], withCompletionBlock completionBlock: (Bool, NSData?)->()) {
-        Alamofire.request(.GET, urlString, parameters: parameters, headers:headers)
-            .response { (request, response, data, error) in
-                if error == nil {
-                    completionBlock(true, data)
+    func performAPICall(urlString: String, method: String?, parameters: [String: AnyObject], withCompletionBlock completionBlock: (Bool, NSData?, NSError?)->()) {
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let manager = NSURLSession(configuration: configuration)
+        let request = NSURLRequest(URL: NSURL(string: urlString)!)
+        let dataTask = manager.dataTaskWithRequest(request) { (data:NSData?, response:NSURLResponse?, error:NSError?) in
+            if error == nil {
+                if let data = data {
+                    completionBlock(true, data, nil)
                 } else {
-                    completionBlock(false, nil)
+                    print(response)
+                    let userInfo = ["NSLocalizedDescriptionKey": "Data not found"]
+                    let error = NSError(domain: "com.datalicious.news", code: 1001, userInfo: userInfo)
+                    completionBlock(false, nil, error)
                 }
+            } else {
+                print(error)
+                completionBlock(false, nil, error)
+            }
         }
+        dataTask.resume()
     }
 }

@@ -10,6 +10,7 @@ import Foundation
 import CoreData
 import iOS_GTLYouTube
 import hpple
+import PinterestSDK
 
 class NDNewsItemController: NSObject {
     var managedObjectContext: NSManagedObjectContext!
@@ -65,6 +66,17 @@ class NDNewsItemController: NSObject {
         youTubeVideo.thumbnailPath = (snippet.thumbnails.additionalPropertyForName("medium") as? GTLYouTubeThumbnail)?.url
     }
     
+    func insertPinObject(pdkPin: PDKPin, boardId:String) {
+        let pin:Pin = NSEntityDescription.insertNewObjectForEntityForName("Pin", inManagedObjectContext: managedObjectContext) as! Pin
+        pin.pinId = pdkPin.identifier
+        pin.boardId = boardId
+        pin.link = pdkPin.url.absoluteString
+        pin.imageURL = pdkPin.smallestImage().url.absoluteString
+        pin.name = pdkPin.descriptionText
+        pin.creationTime = pdkPin.creationTime
+        pin.descriptionText = pdkPin.descriptionText
+    }
+    
     func insertContactObject(contactElement:TFHppleElement, mapURLString: String) {
         let contact:Contact = NSEntityDescription.insertNewObjectForEntityForName("Contact", inManagedObjectContext: managedObjectContext) as! Contact
         //Second element contains the name information...
@@ -84,25 +96,33 @@ class NDNewsItemController: NSObject {
                 //Zero element Area...
                 if element.children.count > 0 {
                     if let areaElement = element.children[0] as? TFHppleElement {
-                        contact.address = areaElement.content
+                        contact.address = areaElement.content.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
                     }
                 }
                 //Second element Address...
                 if element.children.count > 2 {
                     if let addressElement = element.children[2] as? TFHppleElement {
-                        contact.address = contact.address! + addressElement.content
+                        contact.address = contact.address! + addressElement.content.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
                     }
                 }
                 //Fifth element phoneNumber
                 if element.children.count > 5 {
-                    if let phoneNumberElement = element.children[5] as? TFHppleElement {
-                        contact.phoneNumber = phoneNumberElement.attributes!["href"] as? String
+                    if let phoneElement = element.children[5] as? TFHppleElement {
+                        if phoneElement.children.count > 2 {
+                            if let numberElement = phoneElement.children[2] as? TFHppleElement {
+                                contact.phoneNumber = numberElement.content.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).stringByReplacingOccurrencesOfString(" ", withString: "-")
+                            }
+                        }
                     }
                 }
                 //Fifth element emailId
                 if element.children.count > 8 {
-                    if let emailIdElement = element.children[8] as? TFHppleElement {
-                        contact.emailId = emailIdElement.attributes!["href"] as? String
+                    if let emailElement = element.children[8] as? TFHppleElement {
+                        if emailElement.children.count > 1 {
+                            if let emailIdElement = emailElement.children[1] as? TFHppleElement {
+                                contact.emailId = emailIdElement.content.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                            }
+                        }
                     }
                 }
             }
@@ -122,7 +142,7 @@ class NDNewsItemController: NSObject {
             }
         }
     }
-
+    
     func checkIfObjectExistInDatabase(entityName:String, predicate: NSPredicate) -> Bool {
         var objectExist:Bool = false
         let fetchRequest = NSFetchRequest(entityName: entityName)

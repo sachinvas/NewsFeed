@@ -16,39 +16,80 @@ class NDTableViewCell: UITableViewCell {
     @IBOutlet weak var informationLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var dateLabelLeadingConstraint: NSLayoutConstraint!
+    var imagePath: String!
+    var imageDownloadOperation: NDImageDownloaderOperation!
     
-    func populateCellData(dateText: NSDate, titleText: String, information: (text: String, isHTML:Bool), avatarImagePath: String?) {
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        if imagePath != nil {
+            imageDownloadOperation.cancel()
+        }
+    }
+    
+    func populateCellData(dateText: NSDate, titleText: String, information: (text: String, isHTML:Bool), avatarImagePath: String?, iconGroup: IconGroup?) {
         dateLabel.text = NDUtility.utility.newsDateDisplayFormatter.stringFromDate(dateText)
         titleLabel.text = titleText
         if information.isHTML {
-            dispatch_async(dispatch_get_main_queue(), {[weak self] in
-                do {
-                    let text = try NSAttributedString(data: information.text.dataUsingEncoding(NSUTF8StringEncoding)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-                        NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding], documentAttributes: nil)
-                    self?.informationLabel.attributedText = text
-                } catch let error {
-                    print(error)
-                    self?.informationLabel.text = information.text
-                }
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), {[weak self] in
+                autoreleasepool({
+                    var text:NSAttributedString!
+                    do {
+                        text = try NSAttributedString(data: information.text.dataUsingEncoding(NSUTF8StringEncoding)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+                            NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding], documentAttributes: nil)
+                        if  self?.informationLabel.attributedText != nil {
+                            self?.informationLabel.attributedText = nil
+                        }
+                    } catch let error {
+                        print(error)
+                    }
+                    dispatch_async(dispatch_get_main_queue(), {[weak self] in
+                        if text != nil {
+                            self?.informationLabel.attributedText = text
+                            text = nil
+                        } else {
+                            self?.informationLabel.text = information.text
+                        }
+                        })
                 })
-        } else {
-            informationLabel.hidden = true
+                })
+        } else if information.text.characters.count > 0 {
+            dispatch_async(dispatch_get_main_queue(), {[weak self] in
+                let text = NSAttributedString(string: information.text, attributes: nil)
+                self?.informationLabel.attributedText = text
+                self?.informationLabel.sizeToFit()
+                })
         }
         if let avatarImagePath = avatarImagePath {
-            NDNetworkManager.sharedManager.performAPICall(avatarImagePath, method: nil, parameters: [:], headers: [:], withCompletionBlock: {[weak self] (success:Bool, data:NSData?) in
-                dispatch_async(dispatch_get_main_queue(), {
-                    if success {
-                        if let data = data {
-                            self?.avatarImageView.image = UIImage(data: data)
-                            return
+             if !setImageWithAvatarImagePath(avatarImagePath, iconGroup: iconGroup) {
+                self.avatarImageView.image = UIImage(named: "AppIcon40x40")
+                imagePath = avatarImagePath
+                imageDownloadOperation = NDImageDownloaderOperation(imagePath: avatarImagePath, iconGroup: iconGroup)
+                imageDownloadOperation.downloadCompletionBlock = {[weak self](imagePath: String?) in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        if let imagePath = imagePath {
+                            self?.setImageWithAvatarImagePath(imagePath, iconGroup: iconGroup)
                         }
-                    }
-                    self?.avatarImageView.image = UIImage(named: "AppIcon80x80")
-                })
-                })
+                    })
+                }
+                NDImageDownloader.imageDownloader.imageDownloaderQueue.addOperation(imageDownloadOperation)
+            }
         } else {
             dateLabelLeadingConstraint.constant = 5.0
             avatarImageView.hidden = true
         }
+    }
+    
+    func setImageWithAvatarImagePath(avatarImagePath: String, iconGroup: IconGroup?) -> Bool {
+        var isSet = false
+        let filePath = NDImageDownloader.imageDownloader.getFilePath(avatarImagePath, iconGroup: iconGroup)
+        if NSFileManager.defaultManager().fileExistsAtPath(filePath) {
+            if let data = NSData(contentsOfFile: filePath) {
+                self.avatarImageView.image = UIImage(data: data)
+                isSet = true
+            } else {
+                self.avatarImageView.image = UIImage(named: "AppIcon40x40")
+            }
+        }
+        return isSet
     }
 }

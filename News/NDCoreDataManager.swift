@@ -64,7 +64,7 @@ class NDCoreDataManager: NSObject {
     
     lazy var backgroundMOC: NSManagedObjectContext = {
         let managedObjectContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        managedObjectContext.parentContext = self.rootMOC
+        managedObjectContext.parentContext = self.mainQueueMOC
         return managedObjectContext
     }()
 }

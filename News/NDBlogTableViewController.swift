@@ -17,7 +17,6 @@ class NDBlogTableViewController: UITableViewController, NSFetchedResultsControll
     
     lazy var fetchedResultsController: NSFetchedResultsController! = {
         let fetchRequest = NSFetchRequest(entityName: "BlogItem")
-        fetchRequest.fetchLimit = 10
         let sortDescriptor = NSSortDescriptor(key: "publicationDate", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]
         let fetchResultController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: NDCoreDataManager.sharedManager.mainQueueMOC, sectionNameKeyPath: nil, cacheName: nil)
@@ -33,12 +32,19 @@ class NDBlogTableViewController: UITableViewController, NSFetchedResultsControll
         loadingSpinner = MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
         loadingSpinner.label.text = "Fetching Blogs..."
         performFetch()
-        NDNetworkManager.sharedManager.fetchDataLiciousBlogFeeds({[weak self](success:Bool) -> () in
+        NDNetworkManager.sharedManager.fetchDataLiciousBlogFeeds({[weak self](success:Bool, error:NSError?) -> () in
             dispatch_async(dispatch_get_main_queue(), {
+                self?.loadingSpinner.hideAnimated(true)
                 if success {
                     self?.performFetch()
                     self?.tableView.reloadData()
-                    self?.loadingSpinner.hideAnimated(true)
+                } else if let error = error {
+                    let alertController = UIAlertController(title: "Error Occurred", message: error.localizedDescription, preferredStyle: .Alert)
+                    let action = UIAlertAction(title: "Ok", style: .Cancel, handler: { (action:UIAlertAction) in
+                        alertController.dismissViewControllerAnimated(true, completion: nil)
+                    })
+                    alertController.addAction(action)
+                    self?.navigationController?.presentViewController(alertController, animated: true, completion: nil)
                 }
             })
         })
@@ -80,7 +86,19 @@ class NDBlogTableViewController: UITableViewController, NSFetchedResultsControll
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         if let blogItemCell = cell as? NDTableViewCell {
             let blogItem = self.fetchedResultsController.fetchedObjects![indexPath.row] as! BlogItem
-            blogItemCell.populateCellData(blogItem.publicationDate!, titleText: blogItem.title!, information: (text:blogItem.blogDescription!, isHTML:true), avatarImagePath: nil)
+            blogItemCell.populateCellData(blogItem.publicationDate!, titleText: blogItem.title!, information: (text:blogItem.blogDescription!, isHTML:true), avatarImagePath: nil, iconGroup: nil)
+        }
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        if let blogItem = self.fetchedResultsController.fetchedObjects?[indexPath.row] as? BlogItem where blogItem.linkURL != nil {
+            let safariViewController = NDSafariViewController()
+            let url = NSURL(string: blogItem.linkURL!)
+            safariViewController.request = NSURLRequest(URL: url!)
+            safariViewController.title = blogItem.title
+            safariViewController.showNavigationOnPush = true
+            navigationController?.pushViewController(safariViewController, animated: true)
         }
     }
 }

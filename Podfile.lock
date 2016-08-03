@@ -14,7 +14,6 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
-  - Alamofire (3.4.1)
   - Fabric (1.6.7)
   - FirebaseAnalytics (3.2.1):
     - FirebaseInstanceID (~> 1.0)
@@ -58,7 +57,6 @@ PODS:
   - XCDYouTubeKit (2.5.3)
 
 DEPENDENCIES:
-  - Alamofire (~> 3.4)
   - Google/SignIn
   - hpple
   - iOS-GTLYouTube
@@ -78,7 +76,6 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
-  Alamofire: 01a82e2f6c0f860ade35534c8dd88be61bdef40c
   Fabric: caf7580c725e64db144f610ac65cd60956911dc7
   FirebaseAnalytics: 0fd6532cb2c3d03cd5cf26ad295ccb091efd3104
   FirebaseInstanceID: a9d923f3d0b6fbf9fac89310860357aaadc34be5
@@ -99,6 +96,6 @@ SPEC CHECKSUMS:
   TwitterKit: 8a383da8d9c21b0423716381ea8bbfce20622d91
   XCDYouTubeKit: 90690f9e3523735dc93b8024269d991b0cfffe78
 
-PODFILE CHECKSUM: b5153d194ed1ffebab68babc02154262dfb172dd
+PODFILE CHECKSUM: 39ddbe9398b7da46f85ac9bcb6ff45c34339068b
 
 COCOAPODS: 1.0.1

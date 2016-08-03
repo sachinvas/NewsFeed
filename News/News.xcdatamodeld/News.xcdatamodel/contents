@@ -33,6 +33,15 @@
         <attribute name="phoneNumber" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="placeName" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="Pin" representedClassName=".Pin" syncable="YES">
+        <attribute name="boardId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="creationTime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="descriptionText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pinId" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="YouTubeVideo" representedClassName=".YouTubeVideo" syncable="YES">
         <attribute name="position" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="publishedAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -45,7 +54,8 @@
         <element name="Account" positionX="0" positionY="90" width="128" height="120"/>
         <element name="BlogItem" positionX="0" positionY="126" width="128" height="210"/>
         <element name="Category" positionX="9" positionY="171" width="128" height="75"/>
-        <element name="YouTubeVideo" positionX="18" positionY="207" width="128" height="135"/>
         <element name="Contact" positionX="9" positionY="198" width="128" height="150"/>
+        <element name="YouTubeVideo" positionX="18" positionY="207" width="128" height="135"/>
+        <element name="Pin" positionX="9" positionY="198" width="128" height="150"/>
     </elements>
 </model>

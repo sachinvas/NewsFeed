@@ -9,11 +9,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Alamofire.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>MBProgressHUD.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -57,17 +52,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>393E4C2D021FBD7EB5935AA617EFE834</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>5A43FAD7E985FF723794AD1C5753BDFD</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
+		<key>6162DB851AED8CBA1D375141B0BE7D95</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -77,7 +67,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>CFF08BD505AD8D774ECCCCE3E2713711</key>
+		<key>A9807F2395169BB33DFA96EAAF55A9BB</key>
 		<dict>
 			<key>primary</key>
 			<true/>

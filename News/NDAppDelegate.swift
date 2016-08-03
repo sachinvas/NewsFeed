@@ -12,12 +12,12 @@ import TwitterKit
 import GoogleSignIn
 import PinterestSDK
 
-let twitterConsumerKey = ""
-let twitterConsumerSecret = ""
-let pinterestAppId = ""
+let twitterConsumerKey = "uyBkpqDnjRIoQMrwGOG3ZaDhL"
+let twitterConsumerSecret = "5HpHDhBppjVleRsEGZvW7oZumdfPAXqtOdtnMOogLfMNYteEZ9"
+let pinterestAppId = "4848557171236940398"
 
 @UIApplicationMain
-class NDAppDelegate: UIResponder, UIApplicationDelegate {
+@objc class NDAppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
@@ -79,8 +79,33 @@ class NDAppDelegate: UIResponder, UIApplicationDelegate {
         }
         return false
     }
+}
 
-    // MARK: - Core Data stack
 
+extension UIApplication {
+    override public class func initialize() {
+        var onceToken : dispatch_once_t = 0;
+        dispatch_once(&onceToken) {
+            let originalSelector = #selector(UIApplication.openURL(_:))
+            let swizzledSelector = #selector(UIApplication.nd_openURL(_:))
+            let originalMethod = class_getInstanceMethod(self, originalSelector)
+            let swizzledMethod = class_getInstanceMethod(self, swizzledSelector)
+            
+            method_exchangeImplementations(originalMethod, swizzledMethod)
+        }
+    }
+    
+    func nd_openURL(url: NSURL) -> Bool {
+        if url.absoluteString.containsString("https://api.pinterest.com/oauth/?client_id=" + pinterestAppId) {
+            let pinterestAuthController = NDSafariViewController()
+            pinterestAuthController.request = NSURLRequest(URL: url)
+            pinterestAuthController.title = "Twitter Login"
+            pinterestAuthController.requriesDone = true
+            let navController = UINavigationController(rootViewController: pinterestAuthController)
+            UIApplication.sharedApplication().keyWindow?.rootViewController?.presentViewController(navController, animated: true, completion: nil)
+            return false
+        }
+        return nd_openURL(url)
+    }
 }
 

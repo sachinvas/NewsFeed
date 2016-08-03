@@ -16,7 +16,7 @@ import AVFoundation
 import XCDYouTubeKit
 
 let youTubeKeyChain = "YouTubeKeyChain"
-let youTubeClientId = ""
+let youTubeClientId = "1048490923287-9dh44tgkdoskp5t001ppqqp7ac92prfp.apps.googleusercontent.com"
 let youTubeScopes = [
                      "https://www.googleapis.com/auth/youtube",
                      "https://www.googleapis.com/auth/youtube.readonly",
@@ -29,7 +29,6 @@ class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSign
     
     lazy private var fetchedResultsController: NSFetchedResultsController! = {
         let fetchRequest = NSFetchRequest(entityName: "YouTubeVideo")
-        fetchRequest.fetchLimit = 10
         let sortDescriptor = NSSortDescriptor(key: "position", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
         let fetchResultController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: NDCoreDataManager.sharedManager.mainQueueMOC, sectionNameKeyPath: nil, cacheName: nil)
@@ -95,11 +94,20 @@ class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSign
     
     func fetchYouTubeVideos() {
         networkQueue.addOperationWithBlock {
-            NDNetworkManager.sharedManager.getYouTubeDataliciousVideos {[weak self] (sucess:Bool) in
+            NDNetworkManager.sharedManager.getYouTubeDataliciousVideos {[weak self] (sucess:Bool, error: NSError?) in
                 dispatch_async(dispatch_get_main_queue(), {
                     self?.activityView.hidden = true
-                    self?.performFetch()
-                    self?.tableView.reloadData()
+                    if sucess {
+                        self?.performFetch()
+                        self?.tableView.reloadData()
+                    } else if let error = error {
+                        let alertController = UIAlertController(title: "Error Occurred", message: error.localizedDescription, preferredStyle: .Alert)
+                        let action = UIAlertAction(title: "Ok", style: .Cancel, handler: { (action:UIAlertAction) in
+                            alertController.dismissViewControllerAnimated(true, completion: nil)
+                        })
+                        alertController.addAction(action)
+                        self?.navigationController?.presentViewController(alertController, animated: true, completion: nil)
+                    }
                 })
             }
         }
@@ -133,14 +141,14 @@ class NDYouTubeViewController: UITableViewController, GIDSignInDelegate, GIDSign
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         if let youTubeVideoCell = cell as? NDTableViewCell {
             let youTubeVideo = self.fetchedResultsController.fetchedObjects![indexPath.row] as! YouTubeVideo
-            youTubeVideoCell.populateCellData(youTubeVideo.publishedAt!, titleText: youTubeVideo.title!, information: (text:youTubeVideo.videoDescription!, isHTML:false), avatarImagePath: youTubeVideo.thumbnailPath)
+            youTubeVideoCell.populateCellData(youTubeVideo.publishedAt!, titleText: youTubeVideo.title!, information: (text:youTubeVideo.videoDescription!, isHTML:false), avatarImagePath: youTubeVideo.thumbnailPath, iconGroup: .YouTube)
         }
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let youTubeVideo = self.fetchedResultsController.fetchedObjects![indexPath.row] as! YouTubeVideo
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0)) {[weak self] in
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {[weak self] in
             XCDYouTubeClient.defaultClient().getVideoWithIdentifier(youTubeVideo.videoId!) { (video:XCDYouTubeVideo?, error:NSError?) in
                 dispatch_async(dispatch_get_main_queue(), {
                     if error == nil {

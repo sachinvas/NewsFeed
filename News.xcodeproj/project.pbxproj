@@ -11,7 +11,6 @@
 		5400A9A91D4BD57800D284EC /* YouTubeVideo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5400A9A71D4BD57800D284EC /* YouTubeVideo+CoreDataProperties.swift */; };
 		5403193B1D460EFA00C13209 /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540319371D460EFA00C13209 /* Account+CoreDataProperties.swift */; };
 		5403193C1D460EFA00C13209 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540319381D460EFA00C13209 /* Account.swift */; };
-		540319431D460F5B00C13209 /* NDAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5403193F1D460F5B00C13209 /* NDAuthenticationViewController.swift */; };
 		540319441D460F5B00C13209 /* NDPinterestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540319401D460F5B00C13209 /* NDPinterestViewController.swift */; };
 		540319451D460F5B00C13209 /* NDTwitterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540319411D460F5B00C13209 /* NDTwitterViewController.swift */; };
 		540319461D460F5B00C13209 /* NDYouTubeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540319421D460F5B00C13209 /* NDYouTubeViewController.swift */; };
@@ -27,7 +26,12 @@
 		5410AD321D3CCDF300E11E3B /* NDNewtworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5410AD221D3CCDF300E11E3B /* NDNewtworkManager.swift */; };
 		5410AD331D3CCDF300E11E3B /* NDTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5410AD231D3CCDF300E11E3B /* NDTabbarController.swift */; };
 		5410AD341D3CCDF300E11E3B /* NDUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5410AD241D3CCDF300E11E3B /* NDUtility.swift */; };
-		5410AD351D3CCDF300E11E3B /* News.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5410AD251D3CCDF300E11E3B /* News.xcdatamodeld */; };
+		541718BB1D4F972E0039A642 /* NDPinterestPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 541718B91D4F972E0039A642 /* NDPinterestPinViewController.swift */; };
+		54220F181D50FF5C00F83487 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54220F171D50FF5C00F83487 /* WebKit.framework */; };
+		542FEDE01D51118300D32741 /* News.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 542FEDDE1D51118300D32741 /* News.xcdatamodeld */; };
+		542FEDE71D5112C500D32741 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542FEDE51D5112C500D32741 /* Pin.swift */; };
+		542FEDE81D5112C500D32741 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542FEDE61D5112C500D32741 /* Pin+CoreDataProperties.swift */; };
+		542FEDEC1D51BF2700D32741 /* NDImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542FEDEB1D51BF2700D32741 /* NDImageDownloader.swift */; };
 		543BD4BF1D3B31A700075A3D /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 543BD4BE1D3B31A700075A3D /* CoreLocation.framework */; };
 		5440F3741D3CD6000017A427 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5440F3721D3CD6000017A427 /* Main.storyboard */; };
 		5440F3791D3CD62A0017A427 /* BlogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5440F3751D3CD62A0017A427 /* BlogItem.swift */; };
@@ -41,6 +45,7 @@
 		5448EEAB1D37D9A400A7735F /* NewsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5448EEAA1D37D9A400A7735F /* NewsTests.swift */; };
 		5457517B1D3D034300DCF3E7 /* NDTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5457517A1D3D034300DCF3E7 /* NDTableViewCell.swift */; };
 		5457517D1D3D035200DCF3E7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5457517C1D3D035200DCF3E7 /* LaunchScreen.storyboard */; };
+		546863D71D4F3EB000685C0D /* NDSafariViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 546863D61D4F3EB000685C0D /* NDSafariViewController.swift */; };
 		546A57511D3A0DA8003677B2 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 546A57501D3A0DA8003677B2 /* MapKit.framework */; };
 		547CCC461D4A05F700CB738D /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 547CCC451D4A05F700CB738D /* GTMOAuth2ViewTouch.xib */; };
 		5485A8BE1D4C9856002554FA /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5485A8BD1D4C9856002554FA /* CoreFoundation.framework */; };
@@ -62,7 +67,6 @@
 		5400A9A71D4BD57800D284EC /* YouTubeVideo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "YouTubeVideo+CoreDataProperties.swift"; path = "News/YouTubeVideo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		540319371D460EFA00C13209 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Account+CoreDataProperties.swift"; path = "News/Account+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		540319381D460EFA00C13209 /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Account.swift; path = News/Account.swift; sourceTree = "<group>"; };
-		5403193F1D460F5B00C13209 /* NDAuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDAuthenticationViewController.swift; path = News/NDAuthenticationViewController.swift; sourceTree = "<group>"; };
 		540319401D460F5B00C13209 /* NDPinterestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDPinterestViewController.swift; path = News/NDPinterestViewController.swift; sourceTree = "<group>"; };
 		540319411D460F5B00C13209 /* NDTwitterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDTwitterViewController.swift; path = News/NDTwitterViewController.swift; sourceTree = "<group>"; };
 		540319421D460F5B00C13209 /* NDYouTubeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDYouTubeViewController.swift; path = News/NDYouTubeViewController.swift; sourceTree = "<group>"; };
@@ -79,7 +83,12 @@
 		5410AD221D3CCDF300E11E3B /* NDNewtworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDNewtworkManager.swift; path = News/NDNewtworkManager.swift; sourceTree = "<group>"; };
 		5410AD231D3CCDF300E11E3B /* NDTabbarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDTabbarController.swift; path = News/NDTabbarController.swift; sourceTree = "<group>"; };
 		5410AD241D3CCDF300E11E3B /* NDUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDUtility.swift; path = News/NDUtility.swift; sourceTree = "<group>"; };
-		5410AD261D3CCDF300E11E3B /* News.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = News.xcdatamodel; sourceTree = "<group>"; };
+		541718B91D4F972E0039A642 /* NDPinterestPinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDPinterestPinViewController.swift; path = News/NDPinterestPinViewController.swift; sourceTree = "<group>"; };
+		54220F171D50FF5C00F83487 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		542FEDDF1D51118300D32741 /* News.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = News.xcdatamodel; sourceTree = "<group>"; };
+		542FEDE51D5112C500D32741 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Pin.swift; path = News/Pin.swift; sourceTree = "<group>"; };
+		542FEDE61D5112C500D32741 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Pin+CoreDataProperties.swift"; path = "News/Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		542FEDEB1D51BF2700D32741 /* NDImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDImageDownloader.swift; path = News/NDImageDownloader.swift; sourceTree = "<group>"; };
 		543BD4BE1D3B31A700075A3D /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		5440F3721D3CD6000017A427 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = News/Main.storyboard; sourceTree = "<group>"; };
 		5440F3751D3CD62A0017A427 /* BlogItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlogItem.swift; path = News/BlogItem.swift; sourceTree = "<group>"; };
@@ -96,6 +105,7 @@
 		5448EEAC1D37D9A400A7735F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5457517A1D3D034300DCF3E7 /* NDTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDTableViewCell.swift; path = News/NDTableViewCell.swift; sourceTree = "<group>"; };
 		5457517C1D3D035200DCF3E7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = News/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		546863D61D4F3EB000685C0D /* NDSafariViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NDSafariViewController.swift; path = News/NDSafariViewController.swift; sourceTree = "<group>"; };
 		546A57501D3A0DA8003677B2 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		547CCC451D4A05F700CB738D /* GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GTMOAuth2ViewTouch.xib; path = News/GTMOAuth2ViewTouch.xib; sourceTree = "<group>"; };
 		5485A8BD1D4C9856002554FA /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -109,6 +119,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54220F181D50FF5C00F83487 /* WebKit.framework in Frameworks */,
 				54429E391D4CDBF900CBA3D4 /* libxml2.2.tbd in Frameworks */,
 				5485A8BE1D4C9856002554FA /* CoreFoundation.framework in Frameworks */,
 				543BD4BF1D3B31A700075A3D /* CoreLocation.framework in Frameworks */,
@@ -147,6 +158,7 @@
 		5410AD361D3CCE1E00E11E3B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				542FEDDE1D51118300D32741 /* News.xcdatamodeld */,
 				547CCC451D4A05F700CB738D /* GTMOAuth2ViewTouch.xib */,
 				5457517C1D3D035200DCF3E7 /* LaunchScreen.storyboard */,
 				5440F3721D3CD6000017A427 /* Main.storyboard */,
@@ -155,7 +167,6 @@
 				5410AD1A1D3CCDF300E11E3B /* datalicious-logo-default-1024.png */,
 				5410AD1B1D3CCDF300E11E3B /* Info.plist */,
 				5410AD1D1D3CCDF300E11E3B /* NDTableViewCell.xib */,
-				5410AD251D3CCDF300E11E3B /* News.xcdatamodeld */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -163,13 +174,14 @@
 		5410AD371D3CCE2D00E11E3B /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				546863D61D4F3EB000685C0D /* NDSafariViewController.swift */,
 				5410AD231D3CCDF300E11E3B /* NDTabbarController.swift */,
 				5410AD1E1D3CCDF300E11E3B /* NDBlogTableViewController.swift */,
 				540319411D460F5B00C13209 /* NDTwitterViewController.swift */,
 				540319421D460F5B00C13209 /* NDYouTubeViewController.swift */,
 				540319401D460F5B00C13209 /* NDPinterestViewController.swift */,
 				5410AD1F1D3CCDF300E11E3B /* NDContactViewController.swift */,
-				5403193F1D460F5B00C13209 /* NDAuthenticationViewController.swift */,
+				541718B91D4F972E0039A642 /* NDPinterestPinViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -187,6 +199,8 @@
 		5410AD431D3CCF0600E11E3B /* Managed Objects */ = {
 			isa = PBXGroup;
 			children = (
+				542FEDE51D5112C500D32741 /* Pin.swift */,
+				542FEDE61D5112C500D32741 /* Pin+CoreDataProperties.swift */,
 				54429E421D4CF8A400CBA3D4 /* Contact+CoreDataProperties.swift */,
 				54429E3C1D4CF00D00CBA3D4 /* Contact.swift */,
 				5400A9A61D4BD57800D284EC /* YouTubeVideo.swift */,
@@ -208,6 +222,7 @@
 				5410AD1C1D3CCDF300E11E3B /* NDAppDelegate.swift */,
 				5410AD221D3CCDF300E11E3B /* NDNewtworkManager.swift */,
 				5410AD241D3CCDF300E11E3B /* NDUtility.swift */,
+				542FEDEB1D51BF2700D32741 /* NDImageDownloader.swift */,
 				540319361D460C2D00C13209 /* Views */,
 				5410AD371D3CCE2D00E11E3B /* View Controllers */,
 				5410AD381D3CCEC900E11E3B /* CoreData Management */,
@@ -250,6 +265,7 @@
 		5E8711CBA7C6775561F50045 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				54220F171D50FF5C00F83487 /* WebKit.framework */,
 				54429E381D4CDBF900CBA3D4 /* libxml2.2.tbd */,
 				5485A8BD1D4C9856002554FA /* CoreFoundation.framework */,
 				D01D996AA6C569E925FD0D2A /* Pods_News.framework */,
@@ -413,28 +429,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				546863D71D4F3EB000685C0D /* NDSafariViewController.swift in Sources */,
+				541718BB1D4F972E0039A642 /* NDPinterestPinViewController.swift in Sources */,
 				5457517B1D3D034300DCF3E7 /* NDTableViewCell.swift in Sources */,
 				5403193B1D460EFA00C13209 /* Account+CoreDataProperties.swift in Sources */,
 				5440F3791D3CD62A0017A427 /* BlogItem.swift in Sources */,
 				5440F37C1D3CD62A0017A427 /* Category+CoreDataProperties.swift in Sources */,
-				540319431D460F5B00C13209 /* NDAuthenticationViewController.swift in Sources */,
 				5400A9A81D4BD57800D284EC /* YouTubeVideo.swift in Sources */,
 				5440F37A1D3CD62A0017A427 /* BlogItem+CoreDataProperties.swift in Sources */,
 				540319451D460F5B00C13209 /* NDTwitterViewController.swift in Sources */,
 				540319461D460F5B00C13209 /* NDYouTubeViewController.swift in Sources */,
 				5410AD341D3CCDF300E11E3B /* NDUtility.swift in Sources */,
 				5410AD311D3CCDF300E11E3B /* NDNewsItemController.swift in Sources */,
+				542FEDEC1D51BF2700D32741 /* NDImageDownloader.swift in Sources */,
+				542FEDE71D5112C500D32741 /* Pin.swift in Sources */,
 				5400A9A91D4BD57800D284EC /* YouTubeVideo+CoreDataProperties.swift in Sources */,
 				54429E3E1D4CF00D00CBA3D4 /* Contact.swift in Sources */,
 				5410AD331D3CCDF300E11E3B /* NDTabbarController.swift in Sources */,
 				5410AD2C1D3CCDF300E11E3B /* NDAppDelegate.swift in Sources */,
+				542FEDE81D5112C500D32741 /* Pin+CoreDataProperties.swift in Sources */,
+				542FEDE01D51118300D32741 /* News.xcdatamodeld in Sources */,
 				5410AD2E1D3CCDF300E11E3B /* NDBlogTableViewController.swift in Sources */,
 				5410AD301D3CCDF300E11E3B /* NDCoreDataManager.swift in Sources */,
 				5410AD321D3CCDF300E11E3B /* NDNewtworkManager.swift in Sources */,
 				540319441D460F5B00C13209 /* NDPinterestViewController.swift in Sources */,
 				54429E431D4CF8A400CBA3D4 /* Contact+CoreDataProperties.swift in Sources */,
 				5440F37F1D3CD6540017A427 /* NDParser.swift in Sources */,
-				5410AD351D3CCDF300E11E3B /* News.xcdatamodeld in Sources */,
 				5410AD2F1D3CCDF300E11E3B /* NDContactViewController.swift in Sources */,
 				5440F37B1D3CD62A0017A427 /* Category.swift in Sources */,
 				5403193C1D460EFA00C13209 /* Account.swift in Sources */,
@@ -641,12 +661,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		5410AD251D3CCDF300E11E3B /* News.xcdatamodeld */ = {
+		542FEDDE1D51118300D32741 /* News.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				5410AD261D3CCDF300E11E3B /* News.xcdatamodel */,
+				542FEDDF1D51118300D32741 /* News.xcdatamodel */,
 			);
-			currentVersion = 5410AD261D3CCDF300E11E3B /* News.xcdatamodel */;
+			currentVersion = 542FEDDF1D51118300D32741 /* News.xcdatamodel */;
 			name = News.xcdatamodeld;
 			path = News/News.xcdatamodeld;
 			sourceTree = "<group>";
