@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "News/NDContactViewController.swift"
-            timestampString = "491912711.509352"
+            timestampString = "491929466.143242"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "223"
-            endingLineNumber = "223">
+            startingLineNumber = "230"
+            endingLineNumber = "230">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

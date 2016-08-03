@@ -26,6 +26,11 @@ let pinterestAppId = "4848557171236940398"
         // Override point for customization after application launch.
         Twitter.sharedInstance().startWithConsumerKey(twitterConsumerKey, consumerSecret: twitterConsumerSecret)
         Fabric.with([Twitter.self])
+        UIBarButtonItem.appearance().setTitleTextAttributes(
+            [NSForegroundColorAttributeName:UIColor(red: (204.0/255.0), green: 0.0, blue: 0.0, alpha: 1.0),
+                NSFontAttributeName:UIFont(name: "Helvetica-bold", size: 18.0)!
+            ],
+            forState: .Normal)
         PDKClient.configureSharedInstanceWithAppId(pinterestAppId)
         return true
     }

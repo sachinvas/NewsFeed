@@ -62,32 +62,35 @@ class NDContactViewController: UITableViewController, CLLocationManagerDelegate,
     }
     
     func contactNearToUserLocation() -> Contact? {
-        let fetchRequest = NSFetchRequest(entityName: "Contact")
-        let sortDescriptor = NSSortDescriptor(key: "latitude", ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        fetchRequest.resultType = .ManagedObjectResultType
-        var closestContact: Contact?
-        var smallestDistance: CLLocationDistance?
-        do {
-            let fetchedObjects = try NDCoreDataManager.sharedManager.mainQueueMOC.executeFetchRequest(fetchRequest)
-            if let fetchedObjects = fetchedObjects as? Array<Contact> {
-                for contact in fetchedObjects {
-                    if contact.latitude?.intValue == 0 && contact.latitude?.intValue == 0 {
-                        continue
-                    }
-                    let location = CLLocation(latitude: contact.latitude!.doubleValue, longitude: contact.longitude!.doubleValue)
-                    let distance = mapView.userLocation.location?.distanceFromLocation(location)
-                    if smallestDistance == nil || distance < smallestDistance {
-                        closestContact = contact
-                        smallestDistance = distance!
+        if mapView.userLocation.location != nil {
+            let fetchRequest = NSFetchRequest(entityName: "Contact")
+            let sortDescriptor = NSSortDescriptor(key: "latitude", ascending: true)
+            fetchRequest.sortDescriptors = [sortDescriptor]
+            fetchRequest.resultType = .ManagedObjectResultType
+            var closestContact: Contact?
+            var smallestDistance: CLLocationDistance?
+            do {
+                let fetchedObjects = try NDCoreDataManager.sharedManager.mainQueueMOC.executeFetchRequest(fetchRequest)
+                if let fetchedObjects = fetchedObjects as? Array<Contact> {
+                    for contact in fetchedObjects {
+                        if contact.latitude?.intValue == 0 && contact.latitude?.intValue == 0 {
+                            continue
+                        }
+                        let location = CLLocation(latitude: contact.latitude!.doubleValue, longitude: contact.longitude!.doubleValue)
+                        let distance = mapView.userLocation.location?.distanceFromLocation(location)
+                        if smallestDistance == nil || distance < smallestDistance {
+                            closestContact = contact
+                            smallestDistance = distance!
+                        }
                     }
                 }
+            } catch let error {
+                print(error)
             }
-        } catch let error {
-            print(error)
+            print("closestLocation: \(closestContact), distance: \(smallestDistance)")
+            return closestContact
         }
-        print("closestLocation: \(closestContact), distance: \(smallestDistance)")
-        return closestContact
+        return nil
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -201,6 +204,10 @@ class NDContactViewController: UITableViewController, CLLocationManagerDelegate,
             let urlString = "tel:" + phoneNumberLabel.text!
             let url = NSURL(string: urlString)
             self.openURL(url!)
+        } else if indexPath.row == 4 {
+            let supportEmailViewController = NDSupportMailViewController(nibName: "NDSupportMailViewController", bundle: nil)
+            let navController = UINavigationController(rootViewController: supportEmailViewController)
+            navigationController?.presentViewController(navController, animated: true, completion: nil)
         }
     }
     
